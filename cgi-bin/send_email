@@ -1,0 +1,104 @@
+#!/usr/bin/perl
+
+use CGI qw/:all/;
+use Email::Valid;
+
+use strict;
+
+my $docroot = $ENV{'DOCUMENT_ROOT'};
+
+my $syllabi = '/more/syllabi';
+
+my $sender_name = lc param('submitter-name');
+$sender_name =~ s/(^|\s)(.)/$1\u$2/g;
+my $sender_email = lc param('submitter-email');
+my $message = param('message');
+
+my $recipient = 'mathematics@temple.edu';
+
+print header;
+
+# Disabled by P Riesch 8/12/19 due to being an extremely
+# attractive target for spam bots
+
+response("This script has been disabed by CST IT");
+
+#check_email($sender_email);
+#
+#if (($sender_name) and ($sender_email) and ($message)) {
+#	send_email($sender_email,$sender_name,$message,$recipient);
+#	response($sender_name . ", your message was sent to the department and a copy was sent to you.");
+#}
+#else { response("One of message, e-mail or name is missing."); }
+
+
+#sub get_folders {
+#	my $dir = $_[0];
+#	return unless (-d $dir);
+#	opendir DIR, $dir;
+#	my @dirs = readdir DIR;
+#	closedir DIR;
+#	my @units;
+#	for (@dirs) {
+#		next if (/^\./);
+#		next unless (-d $dir . '/' . $_);
+#		push @units, $_;
+#	}
+#	return @units;
+#}	
+
+
+#sub build_select {
+#	my ($name,@options) = @_;
+#	my $Name = ucfirst $name;
+#	@options = ('Choose '.$Name, sort @options);
+#	return popup_menu(-name=>$name,-id=>$name,-values=>\@options);
+#}
+
+#sub send_html {
+#	my $link = $_[0];
+#	return a({-href=>$link,-id=>'link'},'Click here for the syllabus.');
+#}
+
+#sub get_param {
+#	my $var = $_[0];
+#	if (param($var) =~ /undefined/) { return ''; }
+#	else { return param($var); }
+#}
+
+
+#sub getvalue {
+#        my $file = $_[0];
+#        return unless (-e $file);
+#        open FILE, '<', $file;
+#        my @lines = <FILE>;
+#        close FILE;
+#        return join '', @lines;
+#}
+
+
+#sub check_email{
+#	my $email = $_[0];
+#	unless (($email) and (Email::Valid->address( -address => $email))) {
+#		response("Invalid e-mail?");
+#	}
+#}
+
+sub response {
+	my $s = $_[0];
+	print div({-id=>'response',-style=>"display:inline-block;"},$s);
+}
+
+#sub send_email {
+#	my ($sender,$name,$message,$recipient) = @_;
+#        open MAIL, "|/usr/sbin/sendmail -t";
+#         print MAIL 'From: ',$sender,"\n";
+#         print MAIL 'To: ',$recipient,"\n";
+#	 print MAIL 'Cc: ',$sender,"\n";
+#         print MAIL "Subject: Inquiry from Math Web Site\n";
+#         print MAIL "Content-type: text/html\n\n";
+#         print MAIL "<html>";
+#         print MAIL "Inquiry from $name ($sender) from the math web site:".p;
+#	print MAIL $message;
+#         close MAIL;
+#}

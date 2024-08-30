@@ -1,0 +1,2 @@
+<p>I am a Ph.D student working under the supervision of Dr. Benjamin Seibold. My research interests are Traffic Modeling, Data Analysis and Optimization. I have a M.Sc degree in Financial Mathematics. During my master's degree studies, I worked on Stochastic processes and Stochastic Optimizations.<br />I am also interested in Robotics and Micro-controllers.</p>
+

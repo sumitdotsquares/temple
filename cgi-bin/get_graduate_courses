@@ -1,0 +1,47 @@
+#!/usr/bin/perl
+
+use strict;
+use CGI qw/:all/;
+use CGI::Carp 'fatalsToBrowser';
+use Text::CSV;
+use HTML::TokeParser::Simple;
+
+my @pwuid = getpwuid($<);
+my $owner = $pwuid[0];
+my $homedir = $pwuid[7];
+
+my $dept = param('dept');
+my $DEPT = uc $dept;
+
+my $url = 'http://bulletin.temple.edu/courses/' . $dept . '/';
+
+print "Content-type: text/html\n\n",get_bulletin($url);
+
+sub get_bulletin {
+	my $url = $_[0];
+	my $parser = HTML::TokeParser::Simple->new(url => $url);
+        my $level;
+        my $output;
+        while (my $tag = $parser->get_tag('div')) {
+                next unless ($tag->get_attr('class') eq 'courseblock');
+                $level += 1;
+                while (my $token = $parser->get_token) {
+                        $level += 1 if $token->is_start_tag('div');
+                        $level -= 1 if $token->is_end_tag('div');
+                        my $html = $token->as_is;
+                        unless ($level) { last; }
+			$output .= $html;
+                }
+        }
+	$output =~ s/<p class="courseblocktitle">(.*?)<\/p>/<span style="border: none;" class="block"><p><b>$1<\/b><\/p><\/span>/sg;
+	$output =~ s/\/search\//http:\/\/bulletin.temple.edu\/search\//sg;
+	$output =~ s/<strong>//sg;
+	$output =~ s/<\/strong>//sg;
+	my $char = '&#160;';
+	$output =~ s/$char/ /gs; # remove &#160;
+	$output =~ s/<span.*?$DEPT (0|1|2|3|4).*?<\/span>.*?<div.*?<div.*?<\/div>.*?<\/div>\n\n//sg;
+	return "<div id='accordion'>" . $output . '</div>';
+}
+
+
+

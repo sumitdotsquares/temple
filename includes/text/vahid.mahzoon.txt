@@ -1,0 +1,4 @@
+I am a first-year PhD student in the Department of Mathematics at Temple University. I got my bachelor in computer science as well as a minor in Industrial Engineering from Tehran Polytechnic University in Iran.
+
+ My research interests are Numerical Linear Algebra, Scientific Machine Learning, and Numerical Methods for solving PDEs and Optimization.
+

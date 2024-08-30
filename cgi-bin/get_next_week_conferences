@@ -1,0 +1,332 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+# for debugging
+use CGI qw/:all/;
+use JSON;
+use URI;
+use LWP::UserAgent;
+use HTTP::Request;
+require LWP::Protocol::https;
+use Data::Dumper;
+use Date::Parse;
+use File::Path;
+use Date::Calc qw(:all);
+
+my $docroot = $ENV{'DOCUMENT_ROOT'};
+unless ($docroot) { $docroot = '/imports/www/math'; }
+
+
+my $google = 'math.temple.edu@gmail.com';
+
+my $api_key = 'AIzaSyAloGvhTlPnR43-fdvLsLSfeQmBtn3IpN8';
+
+# $mon starts at 0
+# $year start at 1900
+# $wday is numeric weekday starting at sunday=0
+my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+$year += 1900;
+
+# calculate date at start of week
+my ($startyear,$startmonth,$startday) = Add_Delta_Days($year,$mon+1,$mday,+8-$wday);
+my @date = ($startyear,$startmonth,$startday,0,0,0);
+my $weekstart = sprintf("%d-%02d-%02dT%02d:%02d:%02d-04:00", @date);
+
+# calculate date at end of week
+my ($endyear,$endmonth,$endday) = Add_Delta_Days($year,$mon+1,$mday,+14-$wday);
+@date = ($endyear,$endmonth,$endday,23,59,59);
+my $weekend = sprintf("%d-%02d-%02dT%02d:%02d:%02d-04:00", @date);
+
+my %options = ( 'singleEvents' => 'True', 'orderBy' => 'startTime', 'timeMin' => $weekstart, 'timeMax' => $weekend);
+
+my $items = get_calendar_events($google, $api_key, %options);
+
+my $months = [ 'January', 'February','March','April','May','June','July','August','September','October','November','December' ];
+
+my $conference_html = getvalue($docroot . '/includes/html/event-conference.html');
+
+my @conferences;
+
+my @seminartags = get_seminars();
+my @conferencetags = get_conferences();
+
+for my $item (@{$items->{items}}) {
+        my $event;
+        $event->{name} = $item->{summary};
+        my @affiliation;
+        if ($item->{description}) { $event->{description} = $item->{description}; }
+        $event->{location} = $item->{location};
+        my $date = $item->{start}->{dateTime};
+        my $allday = 0;
+        unless ($date) { $date = $item->{start}->{date}; $allday = 1; }
+        my ($ss,$mm,$hh,$day,$month,$year,$zone) = strptime($date);
+        unless ($allday) { $event->{starttime} = $hh . ':' . $mm; }
+        $day =~ s/^0//;
+        $event->{startday} = $day;
+        $event->{startmonth} = $months->[$month];
+        $year += 1900;
+	$event->{weekday} = Day_of_Week_to_Text(Day_of_Week($year,$month+1,$day));
+        $event->{startyear} = $year;
+        $event->{startdate} = $months->[$month] . ' ' . $day . ', ' . $year;
+	my $date = $item->{end}->{dateTime};
+	my $allday = 0;
+	unless ($date) { $date = $item->{end}->{date}; $allday = 1; }
+        ($ss,$mm,$hh,$day,$month,$year,$zone) = strptime($date);
+        unless ($allday) { $event->{endtime} = $hh . ':' . $mm; }
+        $day =~ s/^0//;
+        $event->{endday} = $day;
+        $event->{endmonth} = $months->[$month];
+        $year += 1900;
+        $event->{endyear} = $year;
+        $event->{enddate} = $months->[$month] . ' ' . $day . ', ' . $year;
+	my $html = $conference_html;
+        for (keys %$event) {
+                my $KEY = uc $_;
+                my $value = $event->{$_};
+                unless ($value) { $value = ''; }
+                $html =~ s/$KEY/$value/sg;
+        }
+	# remove all hashtags
+        $html =~ s/#news//gsi;   
+        for (@seminartags) {  $html =~ s/#$_//gsi; }
+	for (@conferencetags) {  $html =~ s/#$_//gsi; }
+	for my $tag (@conferencetags) { 
+		my $localhtml = $html;
+		my $i = $item->{summary} . $item->{location} . $item->{description};
+                if ($i =~ /#$tag/si) {
+                        my $title = a({-href=>'/events/conferences/' . $tag},getvalue($docroot . '/events/conferences/' . $tag . '/.title'));
+                        $localhtml =~ s/TITLE/$title/;
+                        push @conferences,$localhtml;
+                }
+        }
+}
+
+print header;
+
+print h2('Conferences');
+if (@conferences) { print ul({-class=>'cards'},@conferences); }
+else { print p("There are no conferences next week."); }
+
+
+
+############################################################################
+
+# INPUT: email address of the account whose calendar we are querying,
+#       API key allowed to query it,
+#       hash of key/value pairs for the query.
+# RETURNS: perl object of the response for a list request against
+#       the calendar events from the Google calendar v3 API.
+# NOTE: The key/value pairs for the query are the optional 
+#       query parameters for the API request.  The response is the perl form
+#       of the object described in the API.  For documentation, see:
+# https://developers.google.com/google-apps/calendar/v3/reference/events/list
+# NOTE: This gets all results matching your request.  It overrides any maxResults
+#       specified, and continues to query until there are no more results.
+sub get_calendar_events {
+        my ($calendar,$apikey,@data) = @_;
+        return unless ($calendar and $apikey);
+        return if (@data % 2);
+
+        # Get the data as a hash.
+        my %datahash = ( @data );
+
+        # Enforce the key as the API key
+        $datahash{key} = $apikey;
+
+        # Define the maxResults as 2500.
+        $datahash{maxResults} = 2500;
+
+        # Ensure that pageToken is returned if restricted fields are requested.
+        if (defined $datahash{fields}) {
+                unless ($datahash{fields} =~ m/\bnextPageToken\b/) {
+                        $datahash{fields} .= ',nextPageToken';
+                }
+        }
+
+        # Build the URI object
+        # The URL for requesting calendar events
+        my $url = 'https://www.googleapis.com/calendar/v3/calendars/' .
+                $calendar . '/events';
+        my $uri = URI->new($url);
+        # With the query data.
+        $uri->query_form(%datahash);
+
+        # Do an initial request
+        my $obj = get_json_object($uri);
+
+        # List of previous events to keep while we're itterating
+        my @events = ();
+
+        # If there's a nextPageToken in the response, use it.
+        while ($obj->{nextPageToken}) {
+                 # save the previous events
+                @events = map { $_ } @{$obj->{items}};
+
+                # Update the data for the query to get the next page
+                $datahash{pageToken} = delete $obj->{nextPageToken};
+
+                # Make the URI aware of it
+                $uri->query_form(%datahash);
+
+                # Get the object for the next page.
+                $obj = get_json_object($uri);
+
+                # Glue previous events back in.
+                unshift @{$obj->{items}}, @events;
+
+        }
+
+        # Return the object with all of the events
+        return $obj;
+
+}
+
+# INPUT: email address of the account whose calendar we are querying,
+#       API key allowed to query it,
+#       hash of key/value pairs for the query.
+# RETURNS: perl object of the response for a list request against
+#       the calendar events from the Google calendar v3 API.
+# NOTE: The key/value pairs for the query are the optional 
+#       query parameters for the API request.  The response is the perl form
+#       of the object described in the API.  For documentation, see:
+# https://developers.google.com/google-apps/calendar/v3/reference/events/list
+# NOTE: The default is a maximum of 250 results (via maxResults).  The 
+#       maxResults can not be more than 2500.  The events returned from this
+#       function have those limits imposed.
+sub get_limited_calendar_events {
+        my ($calendar,$apikey,@data) = @_;
+        return unless ($calendar and $apikey);
+        return if (@data % 2);
+
+        # The URL for requesting calendar events
+        my $url = 'https://www.googleapis.com/calendar/v3/calendars/' .
+                $calendar . '/events';
+
+        # Use URI to deal with all the ugliness of URL mangling
+        my $uri = URI->new($url);
+
+        # Get the data as a hash.
+        my %datahash = ( @data );
+
+        # Enforce the key as the API key
+        $datahash{key} = $apikey;
+
+        # Set this as the query data
+        $uri->query_form(%datahash);
+
+        # Go get the object
+        my $obj = get_json_object($uri);
+
+        return $obj;
+}
+
+# INPUT: URI object
+# RETURNS: Perl object representation of the JSON that is
+#       a result of a GET request to the URI.
+sub get_json_object {
+        my $uri = shift;
+        return unless $uri;
+
+        # Build the HTTP request using the URI
+        my $req = HTTP::Request->new('GET', $uri)
+                or die "Unable to build HTTP request: $!";
+
+        # Build a light-weight user agent to send the request.  
+        my $ua = LWP::UserAgent->new( ssl_opts => { verify_hostname => 1 } )
+                or die "Unable to set up LWP agent: $!";
+        # Only allow https.
+        $ua->protocols_allowed( [ 'https' ]);
+
+        # Do the request
+        my $res = $ua->request($req);
+
+        # Handle unsuccessful requests.
+        # NOTE: This is lazy -- 50x responses should be retried.
+        die "Request was unsuccessful: " . $res->as_string()
+                unless ($res->is_success());
+
+        # Decode the response content
+        my $obj = eval { decode_json($res->content()) };
+        die "Failed to decode response JSON: $@" if "$@";
+
+        # Return the perl object.
+        return $obj;
+}
+
+
+sub clean {
+	my $s = $_[0];
+	$s = lc $s;
+	$s =~ s/(^| )(.)/$1\u$2/g;
+	$s =~ s/^\s*//;
+	$s =~ s/\s*$//;
+	return $s;
+}
+
+	
+
+sub getvalue {
+        my $file = $_[0];
+        return unless (-e $file);
+        open F, '<', $file;
+        my @lines = <F>;
+        close F;
+        my $output = join "\n", @lines;
+        return $output;
+}
+
+sub get_seminars {
+        opendir DIR, $docroot .'/events/seminars';
+        my @files = readdir DIR;
+        closedir DIR;
+        my @seminars;
+        for (@files) {
+                next if (/^\./);
+                next unless (-d $docroot .'/events/seminars/' . $_);
+                push @seminars,$_;
+        }
+	my $order = get_order('events/seminars');
+        return sort { $order->{$a} <=> $order->{$b} } @seminars;
+}
+
+sub get_conferences {
+        opendir DIR, $docroot .'/events/conferences';
+        my @files = readdir DIR;
+        closedir DIR;
+        my @conferences;
+        for (@files) {
+                next if (/^\./);
+                next unless (-d $docroot .'/events/conferences/' . $_);
+                push @conferences,$_;
+        }
+        my $order = get_order('events/conferences');
+        return sort { $order->{$a} <=> $order->{$b} } @conferences;
+}
+
+
+sub get_order {
+        # $dir is relative to $docroot without leading and trailing /
+        my $dir = $_[0];
+        # if not, remove leading and trailing /
+        $dir =~ s/^\///;
+        $dir =~ s/\/$//;
+        my $order;
+        return unless (-d $docroot . '/' . $dir);
+        opendir DIR, $docroot . '/' . $dir;
+        my @dirs = readdir DIR;
+        closedir DIR;
+        for (@dirs) {
+                next if (/^\./);
+                next unless (-d $docroot . '/' . $dir . '/' . $_);
+                $order->{$_} = 1000;
+        }
+        return $order unless (-e $docroot . '/' . $dir . '/.order');
+        open FILE, $docroot . '/' . $dir . '/.order';
+        @dirs = <FILE>;
+        close FILE;
+        chomp @dirs;
+        for (0..$#dirs) { $order->{$dirs[$_]} = $_+1; }
+        return $order;
+}

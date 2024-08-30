@@ -1,0 +1,1 @@
+My research interests lie in the mathematical modelling and numerical analysis of complex biological processes in the field of Continuous Mechanics. I study and investigate the growth of multispecies biofilms through hyperbolic free-boundary problems, with emphasis on cases of biological and engineering interest. 

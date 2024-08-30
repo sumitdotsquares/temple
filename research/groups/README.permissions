@@ -1,0 +1,9 @@
+
+If you create a file or folder into your research folder, 
+it will have the correct permissions for members of a given group to jointly edit.
+
+If however you copy files from elsewhere into your research folder, you need to run
+
+update_research_permissions
+
+to adjust permissions.

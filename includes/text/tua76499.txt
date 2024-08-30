@@ -1,0 +1,2 @@
+<p>I am a Ph.D. candidate in mathematics at Temple University. My dissertation focuses on block Krylov methods for computing matrix functions applied to multiple vectors, supervised by <a href="../../../~szyld/">Daniel B. Szyld</a> of Temple University and <a href="http://www-ai.math.uni-wuppertal.de/~frommer/">Andreas Frommer</a> of the <a href="http://www.uni-wuppertal.de/startseite/">Bergischen Universit&auml;t Wuppertal</a> in Germany.</p>
+

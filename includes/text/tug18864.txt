@@ -1,0 +1,3 @@
+
+Chelsea Walton's research interests are in noncommutative algebraic geometry, noncommutative invariant theory, quantum groups, and all things noncommutative. She is particularly interested in Quantum Symmetries, i.e. Hopf (co)actions on quantum algebras. She also studies subalgebras of invariants (elements that remain fixed) under the Hopf (co)action under consideration, and deformations of related algebraic structures. Moreover, Walton likes to use methods of noncommutative projective algebraic geometry to analyze noncommutative graded algebras, especially those whose origins lie in physics.
+

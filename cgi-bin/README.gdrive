@@ -1,0 +1,24 @@
+
+GD=gdrive is a command-line client to access Google drives. 
+
+The first time GD is used, it must be initialized. This means a token must be created to guarantee the user's identity to Google. Do this by running
+
+gdrive about
+
+then pasting the resulting URL into a browser where you're logged into Google. It's best if the account you're logged in
+s is the same Google account whose calendar you are using to store events.
+
+Thus for the Math Web Site, the Unix user  is "math" and the Google account is math.temple.edu@gmail.com. Do not create the token when logged in as yourself.
+
+In CGI scripts, call GD as follows:
+
+my $abstracts = $docroot . '/events/seminars/' . $seminar . '/abstracts';
+my $homedir = '/usr/home/local/users/math';
+my $gd = "/imports/temple/bin/gdrive --config $homedir/.gdrive download --path $abstracts";
+unless (-e $abstracts . '/' . $filename) { system "$gd $fileId > /dev/null"; }
+
+GD is accessible across all VMs under the path
+
+/imports/temple/bin/gdrive
+
+

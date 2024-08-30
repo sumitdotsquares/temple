@@ -1,0 +1,2 @@
+<p>I am a PhD candidate at the Department of Mathematics under the supervision of&nbsp; Professor Wei-Shih Yang. My research area includes time-inhomogenous quantum random walk with decoherence on finite spaces and discrete infinite spaces.</p>
+

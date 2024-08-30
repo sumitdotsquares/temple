@@ -1,0 +1,2 @@
+<p>Xinli is a phd candidate working on asynchronous methods under the supervision of Prof Daniel Szyld. Asynchronous parallel solvers are new techniques that speed up the computation time. The main character of asynchronous algorithm is that the local algorithms do not have to wait at predetermined points for predetermined messages to become available. Asynchronous method has wide applications including solving nonsingular linear systems, Nonlinear equations, Waveform relaxation and so on.</p>
+

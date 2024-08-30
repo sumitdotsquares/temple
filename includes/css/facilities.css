@@ -1,0 +1,28 @@
+#serc {
+  width: 820px;
+  margin: 30px auto 90px auto;
+}
+
+#biolife {
+  padding: 16px 55px 90px 55px;
+}
+#biolife > img {
+  height: 540px;
+  width: 400px;
+}
+
+.description {
+  padding-top: 80px;
+  width: 340px;
+}
+.description p {
+  margin-bottom: 28px;
+}
+
+.more {
+  display: inline-block;
+  width: 320px;
+}
+.more a {
+  font-weight: bold;
+}

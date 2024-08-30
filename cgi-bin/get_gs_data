@@ -1,0 +1,50 @@
+#!/usr/bin/perl
+
+use strict;
+use CGI qw/:all/;
+use CGI::Carp 'fatalsToBrowser';
+use Text::CSV;
+use HTML::TableExtract;
+use WWW::Mechanize;
+use HTML::Parser;
+use HTML::Entities;
+
+my @pwuid = getpwuid($<);
+my $owner = $pwuid[0];
+my $homedir = $pwuid[7];
+
+my $gs = param('gs');
+
+exit unless ($gs);
+
+print "Content-type: text/json\n\n",get_gs($gs);
+
+
+##########################################
+
+sub get_gs {
+	my $url = $_[0];
+	my $mech = WWW::Mechanize->new();
+	$url =~ s/https/http/;
+	$mech->get($url);
+	my $html = $mech->content();
+	my $te = new HTML::TableExtract( headers => ["Citation indices", "All", "Since 2011"] );
+	$te->parse($html);
+ 	# assume there is only one matching table
+ 	my $ts = $te->first_table_state_found();
+	# first row is citations
+	my $row = $ts->rows->[0];
+	# second column
+	my $cit = $row->[1];
+	# second row is h-index
+	my $row = $ts->rows->[1];
+	# second column
+	my $h = $row->[1];
+	# third row is i10-index
+	my $row = $ts->rows->[2];
+	# second column
+	my $i10 = $row->[1];
+	return qq({"citations":{"count":"$cit"},"statistics":{"hIndex":"$h","i10Index":"$i10"}});
+}
+
+

@@ -1,0 +1,2 @@
+My areas of research are partial differential equations and several complex variables. In recent years, I have been mainly working on two problems: the regularity of CR (Cauchy-Riemann) mappings and unique continuation for CR mappings as well as second order elliptic and subelliptic differential operators.
+

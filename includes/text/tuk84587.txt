@@ -1,0 +1,4 @@
+<ul>
+<li>I am a 1st year PhD student interested in geometric group theory and low-dimensional topology. Outside of math I love to spend time with my wife and dog and watch Premier League soccer.</li>
+</ul>
+

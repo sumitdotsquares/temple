@@ -1,0 +1,20 @@
+
+Look at the pre-2016 applied or algebra pages (old layout) versus the pre-2016 analysis pages (new layout).  The layout of each talk 
+announcement is different. There are corresponging two different scripts that produces these layouts
+
+get_past_year_seminars
+get_past_year_seminars_old
+
+The reason is that the script was modified mid-stream, so some seminars were downloaded via the old script (eg applied 2015 or before) 
+and some via the current script (eg analysis 2015). You can see the difference in the event layouts in gcal and in the resulting web page.
+For all seminars, for 2016 and going forward, we use the newer layout.
+
+If you need to re-download a past seminar year, and you used the wrong script, just re-download with the correct script.
+
+The current year is downloaded via
+
+get_current_year_seminars
+
+in real time upon loading the seminar page. Do not use the above past scripts to download the current year.
+
+

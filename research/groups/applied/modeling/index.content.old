@@ -1,0 +1,217 @@
+<div id="content">
+<h1>Math 8107: Mathematical Modeling for Science, Engineering, and Industry</h1>
+<br>
+
+
+<h2>Course Instructors</h2>
+<ul>
+<li><a href="http://www.math.temple.edu/~yury/">Yury Grabovsky</a></li>
+<li><a href="http://www.math.temple.edu/~klapper/">Isaac Klapper</a></li>
+<li><a href="http://www.math.temple.edu/~seibold/">Benjamin Seibold</a></li>
+<li><a href="http://www.math.temple.edu/~szyld/">Daniel B. Szyld</a></li>
+</ul>
+
+
+<h2>Course Description</h2>
+<p>
+This course is quite different from the typical mathematics course. Participating
+students work in groups on projects that arise in industry, engineering, or in
+other disciplines of science. In addition to being advised by the course
+instructors, in all projects an external partner is present. The problems are
+formulated in non-mathematical language, and the final results need to be
+formulated in a language accessible to the external partner. This means in
+particular that the mathematical and computational methods must be selected or
+created by the students themselves.
+</p>
+<div align="right"><a href="#top">top</a></div>
+
+
+<h2>Course Goals</h2>
+<p>
+Students learn modeling by doing. On the way, they train a wide variety of
+skills, such as creative modeling, literature and internet research, group
+discussions, applied analysis, scientific programming, and presentation skills.
+Each student will be a master of his project, and in addition understands and
+learns about the other students' projects.
+</p>
+<div align="right"><a href="#top">top</a></div>
+
+
+<h2>Grading</h2>
+<p>
+The course grading is based on the weekly presentations, the project reports,
+and on class participation. The are no exams. More than in traditional lectures,
+the success of the project research depends on the students' own creative work.
+We expect each student to devote at least 10 hours per week to the project work.
+</p>
+<div align="right"><a href="#top">top</a></div>
+
+
+<h2>Why Should I Take This Course?</h2>
+<p>
+The active process of modeling is a crucial component of research in applied
+mathematics and related fields. Yet, in traditional lectures it is rarely
+taught. In this course, students receive extensive advising and mentoring
+in modeling, active research, and interactions with an external partner.
+Since the unique experience of this course grows with the diversity of
+student backgrounds, <it>students from pure mathematics, as well as other
+fields of science and engineering are highly encouraged to contact the
+instructors about this course</it>.
+</p>
+<div align="right"><a href="#top">top</a></div>
+
+
+<h2>Projects and Partner Companies</h2>
+<p>
+Current projects and partner companies:
+</p>
+
+<table border="0" cellspacing="1" cellpadding="1">
+
+<tr><td><p style="font-size:13px;">
+<a href="http://www.dvrpc.org/">Delaware
+Valley Regional Planning Commission (DVRPC)</a>,
+Philadelphia, PA, USA,
+is the metropolitan planning organization repsonsible for
+transportation and regional planning in the greater Philadelphia area.
+In order to decide on the allocation of funds, DVRPC runs large simulations
+of the transportation in Philadelphia and adjacent counties in PA and NJ,
+enabling predidictions of the travel demand over the next decades.
+A crucial component of these simulations are models for the
+distribution of trips that residents and employees in the metro area take.
+<br>
+<b>Project</b>: <i>Destination choice models in travel demand forecasting</i>
+
+</td><td>
+<a href="http://www.dvrpc.org/"><img
+src="logo_dvrpc.png" width="250" height="110" border="0" align="right"></a>
+</td></tr>
+
+<tr><td><p style="font-size:13px;">
+<a href="http://www.nps.gov">U.S. National Park Service</a>.
+Marble and granite monuments (from the Washington Monument down to
+historic grave stones) are affected by lichens and biofilms.
+Fundamental question for the preservation of the national heritage are:
+Are lichens harmful to the stone? Or could they possibly help preserve the
+stone by protecting it from acid rain? Could the cleaning be more harmful
+to the stone than the presence of biofilms and lichens?
+<br>
+<b>Project</b>: <i>Effect of lichens and biofilms on marble and granite monuments</i>
+</td><td>
+<a href="http://www.nps.gov"><img
+src="logo_nps.png" width="250" height="110" border="0" align="right"></a>
+</td></tr>
+
+</table>
+
+<p>
+Past modeling projects have been conducted in collaboration with
+the following companies:
+</p>
+
+<table border="0" cellspacing="1" cellpadding="1">
+
+<tr><td><p style="font-size:13px;">
+<a href="http://www.elixrcoffee.com">Elixr Coffee</a>,
+Philadelphia, PA, USA, is the coffee place with the best cappuccino
+in the western hemisphere. For them, the creation of a perfect
+cappuccino foam is an aspect of pride; and also of great interest
+to be understood from a scientific perspective.
+<br>
+<b>Project</b>: <i>Stability of cappuccino foams</i>
+</td><td>
+<a href="http://www.elixrcoffee.com"><img
+src="logo_elixr.png" width="250" height="65" border="0" align="right"></a>
+</td></tr>
+
+<tr><td><p style="font-size:13px;">
+<a href="http://astro.temple.edu/~sthsieh/">Hsieh Lab</a>, Temple University.
+Prof. Tonia Hsieh and her postdoctoral researchers and students study the
+locomotion of lizards, cockroaches, and other animals. The creation and
+study of mathematical models is of crucial importance for the understanding
+of the underlying dynamics of locomotion.
+<br>
+<b>Project</b>: <i>Modeling inverted cockroach locomotion</i>
+</td><td>
+<a href="http://astro.temple.edu/~sthsieh/"><img
+src="logo_hsieh.jpg" width="250" height="65" border="0" align="right"></a>
+</td></tr>
+
+<tr><td><p style="font-size:13px;">
+<a href="http://www.gamry.com">Gamry Instruments</a>,
+Warminster, PA, USA, is a company that designs and manufactures electrochemical
+instruments, in particular impedance-scanning quartz crystal microbalance
+systems.<br>
+<b>Project</b>: <i>Efficient impedance measurements at low frequency</i>
+</td><td>
+<a href="http://www.gamry.com"><img
+src="logo_gamry.png" width="250" height="65" border="0" align="right"></a>
+</td></tr>
+
+<tr><td><p style="font-size:13px;">
+<a href="http://www.meteomedia.de/index.php?id=home&lang=1">Meteomedia AG</a>
+is one of the leading weather services in Europe, with subsidiaries in
+Germany, Switzerland, Canada and the USA. One of their products is weather
+forecast for television. Meteomedia produces weather reports for the German
+state TV broadcaster ARD and numerous other TV and radio stations in Germany.<br>
+<b>Project</b>: <i>The automatic detection of weather fronts from forecast data</i>
+</td><td>
+<a href="http://www.meteomedia.de/index.php?id=home&lang=1"><img
+src="logo_meteomedia.png" width="250" height="65" border="0" align="right"></a>
+</td></tr>
+
+</table>
+<div align="right"><a href="#top">top</a></div>
+
+
+<h2>Photos</h2>
+<table cellspacing="0" cellpadding="0">
+<tr><td align=center>
+<img src="modeling2012_team_cappuccino.jpg" width="600" height="400" border="0">
+</td></tr>
+<tr><td align=center>
+The unveiling of the cappuccino foam project poster at Elixr.
+</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td align=center>
+<img src="modeling2012_team_cockroach.jpg" width="600" height="400" border="0">
+</td></tr>
+<tr><td align=center>
+Members of the cockroach project team; with two cockroaches.
+</td></tr>
+</table>
+
+<br>
+
+
+<h2>Modeling Course - Fall 2013</h2>
+The course is currently running.
+<div align="right"><a href="#top">top</a></div>
+
+
+<h2>Modeling Course - Fall 2011</h2>
+<ul>
+<li><a href="syllabus11.pdf">Course Syllabus</a></li>
+</ul>
+<div align="right"><a href="#top">top</a></div>
+
+
+<h2>Modeling Course - Spring 2010</h2>
+<ul>
+<li><a href="http://math.temple.edu/syllabi/2010/Spring/8200/001/">Course Syllabus</a></li>
+<!li Course hours: TR 9:30-10:50</li>
+<!li Schedule: Tuesdays presentations. Thursdays special topics lectures and discussions,
+as requested by the students. Outside of classes, groups meet independently, and work
+on their projects.</li>
+</ul>
+<div align="right"><a href="#top">top</a></div>
+
+
+<h2>Links</h2>
+<ul>
+<li><a href="http://www.math.temple.edu/research/applied/">Applied Mathematics Group</a></li>
+</ul>
+<div align="right"><a href="#top">top</a></div>
+
+</div>
+

@@ -1,0 +1,2 @@
+<p>I am a 6th year graduate student studying low-dimensional geometry and topology under Dave Futer. My interests include hyperbolic 3-manifolds &amp; their triangulations, commensurability of 3-manifolds, and experimental mathematics. In my current research I am studying veering triangulations of hyperbolic mapping tori, with an emphasis on experimental methods.</p>
+

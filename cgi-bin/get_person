@@ -1,0 +1,199 @@
+#!/usr/bin/perl
+
+use strict;
+use CGI qw/:all/;
+use CGI::Carp 'fatalsToBrowser';
+use Spreadsheet::XLSX;
+use URI;
+
+my @pwuid = getpwuid($<);
+my $owner = $pwuid[0];
+my $homedir = $pwuid[7];
+
+my $docroot = $ENV{'DOCUMENT_ROOT'};
+my $server = $ENV{'HTTP_HOST'};
+
+my $textdir = $docroot . '/includes/text';
+
+my $xlsx = Spreadsheet::XLSX -> new ($docroot . '/includes/data/people.xlsx');
+
+my ($headings,@rows) = get_headings_and_rows(get_worksheet('',$xlsx));
+
+my $uid =param('uid');
+
+print header;
+
+if (!($uid =~ /^[a-zA-Z0-9]+/)) { exit; }
+
+my $default_html = getvalue($docroot . '/includes/html/person-detail.html');
+
+my @research_categories = get_folder('/research/groups/'); 
+my @leadership_categories = get_folder('/people/leadership/'); 
+
+#layout of row
+#last,first,middle,degree,designations,fields,title,institution,project,major,additionaltitle,department1,department2,gs,uid,phone,office,website,avatar,bio,keywords
+
+my $row;
+
+for (@rows) {
+	next unless ($_->{uid} eq $uid);
+	$row = $_;
+	last;
+}
+
+
+if ($row->{gs}) { 
+	$row->{'gs'} = qq(<span class="icon fa fa-graduation-cap"></span>);
+	$row->{'gs'} .= a({-href=>$row->{gs},-target=>'_blank'},'Google Scholar'); 
+}
+
+my $imagedir = '/includes/img/staff';
+
+$row->{avatar} = $imagedir . '/' . get_avatar($row->{uid});
+
+my @research;
+for (@research_categories) { 
+	if ($row->{'designations'} =~ /(^|\|)$_(\||$)/) { 
+		my $title = getvalue($docroot . '/research/groups/' . $_ . '/.title');
+		push @research, $title; 
+	} 
+}
+
+$row->{'research'} = join '<br>', @research; 
+
+$row->{bio} = getvalue($textdir . '/' . $uid . '.txt') ;
+
+
+my $html = $default_html;
+
+if ($row->{'website'} =~ /^http/) { $row->{'websitedisplay'} = $row->{'website'}; }
+else { $row->{'websitedisplay'} = 'https://' . $server . $row->{'website'}; }
+
+if ($row->{'additionaltitle'}) { $row->{'title'} .= '<br/>' . $row->{'additionaltitle'}; $row->{'title'} =~ s/\|/<br\/>/g; }
+
+for ('bio','fields','leadership','first','last','middle','uid','avatar','websitedisplay','website','phone','mail',
+	'office','institution','department1','department2','research','title','id','gs') { 
+	my $UC = uc $_; 
+	my $replac = $row->{$_}; 
+	$html =~ s/$UC/$replac/sg;
+}
+
+print div({-class=>'grid people'},$html);
+
+
+
+sub getvalue {
+	my $file = $_[0];
+	return unless (-e $file);
+	open FILE, '<', $file;
+	my @lines = <FILE>;
+	close FILE;
+	my $output = join "\n", @lines;
+	return $output;
+}
+
+sub get_hash {
+         my $h;
+        my @a;
+        return unless (-e $_[0]);
+        open FILE, $_[0];
+         for (<FILE>) {
+                next if (/^#/);
+                chomp;
+                if (//) { my ($k,$v) = split ''; $h->{$k} = $v; push @a, $k; }
+                else { $h->{$_} = $_; push @a, $_; }
+        }
+        close FILE;
+         return ($h,@a);
+}
+
+sub is_active {
+        # $dir is relative to $docroot with leading /
+        my $dir = $_[0];
+        return unless (-d $docroot . $dir);
+        return unless (-e $docroot . $dir . 'index.html');
+        return unless (-e $docroot . $dir . '.title');
+        $dir =~ /^\/(.*?)\/$/;
+        return $1;
+}
+   
+
+
+sub get_folder {
+        # $dir is relative to $docroot with leading and trailing /
+        my $dir = $_[0];
+        return unless (-d $docroot . $dir);
+        opendir DIR, $docroot . $dir;
+        my @dirs = readdir DIR;
+        closedir DIR;
+        my @navbar;
+        for (@dirs) {
+                next if (/^\./);
+                if (is_active($dir . $_ . '/')) { push @navbar, $_; }
+        }
+        return @navbar;
+}
+
+# returns worksheet  corresponding to excel file 
+# and worksheet name
+
+sub get_worksheet {
+        my ($name,$excel) = @_;
+        my @worksheets = @{$excel -> {Worksheet}};
+        if ($#worksheets == 0) { return $worksheets[0]; }
+        for (@{$excel -> {Worksheet}}) {
+                next unless ($_->{Name} eq $name);
+                return $_;
+        }
+        die "worksheet $name nonexistent in excel\n";
+}
+
+
+
+# returns array of rows of worksheet
+# each row a hashref whose  keys are 
+# the headings and the values are the 
+# corresponding cell  values
+# also returns headings as array ref
+
+sub get_headings_and_rows {
+        my $sheet = $_[0];
+        my @rows;
+        my $headings;
+        foreach my $col (0 ..  $sheet -> {MaxCol}) {
+                my $heading = $sheet -> {Cells} [0] [$col];
+                # remove leading and trailing whitespace
+                if ($heading -> {Val}) {
+                        $heading -> {Val} =~ s/\s+$//;
+                        $heading -> {Val} =~s/^\s+//;
+                }
+                if ($heading) { push @$headings, $heading -> {Val}; }
+        }
+        foreach my $row (1 .. $sheet -> {MaxRow}) {
+                my $h;
+                foreach my $col (0 ..  $sheet -> {MaxCol}) {
+                        my $cell = $sheet -> {Cells} [$row] [$col];
+                        my $heading = $headings -> [$col];
+                        if ($heading) {
+                                if ($cell -> {Val}) { $h -> {$heading} =  $cell -> {Val}; }
+                                else { $h -> {$heading} = ''; }
+                        }
+                }
+                push @rows, $h;
+        }
+        return ($headings,@rows);
+}
+
+sub get_avatar {
+        my $uid = $_[0];
+        opendir DIR, $docroot . '/includes/img/staff';
+        my @headshots = readdir DIR;
+        closedir DIR;
+        my $headshot;
+        for (@headshots) {
+                next unless (/^$uid\./);
+                $headshot = $_;
+        }
+        unless ($headshot) { $headshot = 'default.jpeg'; }
+        return $headshot;
+}

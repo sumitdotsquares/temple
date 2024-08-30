@@ -1,0 +1,2 @@
+<p>My research interests are broadly in the area of geometric group theory. Specifically I am interested in the geometry of free groups as reflected by their (outer) automorphisms, the analogy between the resulting structure theory and surface theory, and applications of the theory throughout low dimensional topology. Along the way many delightful combinatorial questions arise and I also spend some time pursuing them.</p>
+

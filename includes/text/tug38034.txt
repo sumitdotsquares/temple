@@ -1,0 +1,4 @@
+<p>I am a graduate student at Temple University. 
+I am working under the advise of Matthew Stover. My research interest lies in hyperbolic geometry and low-dimensional topology.
+Specifically, I am interested in the character varieties, totally geodesic surfaces of hyperbolic 3-manifolds, and left orderability.</p>
+

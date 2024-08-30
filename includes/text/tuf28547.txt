@@ -1,0 +1,2 @@
+<p>Tim Morris is pursuing dissertation research on arithetic manifolds, hyperbolic geometry, character varieties of 3-manifold groups, and some geometric group theory. His thesis advisor is <a href="../../../~mstover">Matthew Stover</a>.</p>
+

@@ -1,0 +1,177 @@
+#!/usr/bin/perl
+
+use CGI qw/:all/;
+
+use strict;
+
+my $docroot = $ENV{'DOCUMENT_ROOT'};
+
+my $grades = '/ugrad/get_your_grade';
+
+my $action = param('submit');
+
+my $year = get_param('year');
+my $semester = get_param('semester');
+my $course = get_param('course');
+
+my @formvars = ('course','semester','year',
+		'reviewmax','reviewpercent',
+		'test1max','test1percent',
+		'test2max','test2percent',
+		'test3max','test3percent',
+		'quizzesmax','quizzespercent',
+		'finalmax','finalpercent');
+		
+my @letters = ('A','A-','B+','B','B-','C+','C','C-','D+','D','D-','F');
+
+
+
+print header;
+
+
+if (get_param('status') eq 'complete') {
+	my ($grades,@exams) = get_course_grades($docroot . $grades . '/' . $year . '/' . $semester . '/' . $course );
+	my $ave;
+	for (@exams) { $ave += param($_) * $grades->{$_}->{percent} / $grades->{$_}->{max};  	}
+	my $letter;
+	for (@letters) { 
+		next unless ($grades->{$_}->{min} <= $ave);
+		next unless ($ave <= $grades->{$_}->{max});
+		$letter = $_;
+		last;
+	}
+	my $response = "With the above entries, your $course course grade ($semester $year) is "
+                . $letter . ' (' . $ave . '/100).';
+	print div({-id=>'response'},font({-color=>'red'},$response));
+}
+elsif (($year) and ($semester) and ($course)) {
+	my $html = h1('Math ' . $course . ' - ' . $semester . ' ' . $year)."\n";
+	$html .= p('Enter the <b>raw score</b> for each item. Blank entries are counted as zero.')."\n";
+	$html .= qq(<form id="grade" method="POST" action="/cgi-bin/get_your_grade" enctype="multipart/form-data">\n);
+	my ($grades,@exams) = get_course_grades($docroot . $grades . '/' . $year . '/' . $semester . '/' . $course );
+	for (@exams) {
+		$html .= qq(<p style="width: 200px;display: inline-block;">\n<span style="display: inline-block;"><b>) 
+			. $grades->{$_}->{name} . qq(</b></span></p>\n);
+		$html .= qq(<input type="text" placeholder="Enter grade ..." name=") 
+			. $grades->{$_}->{name} . qq(" id=") . $grades->{$_}->{name} . qq(">\n);
+		$html .= qq(<span> \(maximum score ) . $grades->{$_}->{max} . qq( counts as ) . 
+			$grades->{$_}->{percent} . qq(% of course grade<br></span>\n\n);
+	}
+	$html .= qq(<input type='hidden' id='status' name='status' value='complete'>);
+	for ('year','semester','course') { 
+		my $val = param($_);
+		$html .= qq(<input type='hidden' id='$_' name='$_' value='$val'>\n); 
+	}
+	$html .= end_form . "\n";
+	$html .= qq(<p style="width: 200px;display: inline-block;"><span style="display: inline-block;"><b>)
+                        . 'When done, click ' . qq(</b></span></p>\n\n);
+        $html .= qq(<button class="btn btn-primary" id='submit'>Get Grade</button>\n);
+	$html .= div({-id=>'response'},'');
+	print div({-id=>'html'},$html);
+}
+elsif (($year) and ($semester)) {
+        my @courses = get_folders($docroot . $grades . '/' . $year . '/' . $semester);
+        print build_select('course',@courses);
+}
+elsif ($year) {
+        my @semesters = get_folders($docroot . $grades . '/' . $year);
+        print build_select('semester',@semesters);
+}
+else { 
+	my @years = get_folders($docroot . $grades);
+	print build_select('year',@years);
+}
+
+print "\n",div({id=>'place-holder'},'');
+
+
+
+
+sub get_folders {
+	my $dir = $_[0];
+	return unless (-d $dir);
+	opendir DIR, $dir;
+	my @dirs = readdir DIR;
+	closedir DIR;
+	my @units;
+	for (@dirs) {
+		next if (/^\./);
+		next unless (/^(Fall|Spring|Summer1|Summer2|\d\d\d\d)$/);
+		push @units, $_;
+	}
+	return @units;
+}	
+
+
+sub build_select {
+	my ($name,@options) = @_;
+	my $Name = ucfirst $name;
+	@options = ('Choose '.$Name, sort @options);
+	#return popup_menu(-name=>$name,-id=>$name,-values=>\@options);
+	return select_popup($name,'',@options);
+}
+
+sub send_html {
+	my $link = $_[0];
+	return a({-href=>$link,-id=>'link'},'Click here for the syllabus.');
+}
+
+sub get_param {
+	my $var = $_[0];
+	if (param($var) =~ /undefined/) { return ''; }
+	else { return param($var); }
+}
+
+
+sub getvalue {
+        my $file = $_[0];
+        return unless (-e $file);
+        open FILE, '<', $file;
+        my @lines = <FILE>;
+        close FILE;
+        return @lines;
+}
+
+
+sub get_html {
+
+}
+
+sub get_course_grades {
+	my $file = $_[0];
+	return unless (-e $file);
+	my $h;
+	my @g;
+	open FILE, '<', $file;
+	for (<FILE>) {
+		chomp;
+		if (s/^#//) {
+			my ($g,$max,$min) = split ':';
+			$h->{$g}->{max} = $max;
+			$h->{$g}->{min} = $min;
+		}
+		elsif (/:/) {
+                        my ($q,$m,$p) = split ':';
+                        unless ($q =~ /^#/) { next if ($p == 0); }
+                        ($h->{$q}->{name},$h->{$q}->{max},$h->{$q}->{percent}) = ($q,$m,$p);
+			push @g, $h->{$q}->{name};
+                }
+	}
+	close FILE;
+	return ($h,@g);
+}
+
+
+
+sub select_popup {
+        my ($name,$default,@options) = @_;
+        my $html = qq(<div style="display:inline-block;"> <div class="select"> <select name=$name  id=$name>);
+        for (@options) {
+                if ($_ eq $default) { $html .= qq(<option value="$_" selected>$_</option>\n); }
+                else { $html .= qq(<option value="$_">$_</option>\n);  }
+        }
+        $html .= "</select></div> </div>\n";
+        return $html;
+}
+
+

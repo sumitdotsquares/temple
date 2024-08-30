@@ -1,0 +1,10 @@
+<p>Interested in:</p>
+<ul>
+<li>Probability theory</li>
+<li>Numerical linear algebra</li>
+<li>Statistical learning</li>
+<li>Biological modeling</li>
+</ul>
+<p>Pursuing M.S. thesis under Dr. Wei-Shih Yang.</p>
+<p>Favorite book so far in 2019: <em>If Beale Street Could Talk</em> by James Baldwin.</p>
+

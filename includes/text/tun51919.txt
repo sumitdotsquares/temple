@@ -1,0 +1,2 @@
+<p>My primary research interest is mathematical biology. During my PhD, I studied ODE models of T-cell population dynamics during healthy aging, thymic disease, and HIV infection. At Temple, I am studying PDE models of the spread of the spotted lanternfly pest. I am also broadly interested in other areas of applied math, including variational calculus, optimization, and applied analysis.</p>
+

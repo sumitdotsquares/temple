@@ -1,0 +1,224 @@
+
+<!--#include virtual='/cgi-bin/get_header' -->
+
+
+<div id='grid' class="grid people">
+
+The Department of Mathematics at Temple University has a strong
+tradition of research in algebra and number theory. 
+Under the leadership of 
+<a href="http://en.wikipedia.org/wiki/Emil_Grosswald">Emil Grosswald</a>,
+a member of our faculty
+from 1968 to 1980, research in our department developed a particular
+focus in analytic number theory. Grosswald's memory is honored by 
+our ongoing distinguished 
+<a href="https://math.temple.edu/events/seminars/grosswald/">lecturer 
+series</a>
+which carries his name.
+
+More recently, research in the <em>Algebra and Number Theory</em> group has
+diversified and acquired further strengths in several
+other areas, notably in noncommutative algebra. 
+</p>
+
+
+
+<p id='details'>
+Click on picture for details.
+</p>
+
+  <!--#include virtual='/cgi-bin/get_people' -->
+
+
+<h2>Research Profile</h2>
+<p>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr><td>
+The <em>Algebra and Number Theory</em> group is active in a variety of
+research areas including:
+</p>
+<ul>
+<li>operads</li>
+<li>homotopy algebras</li>
+<li>deformation theory</li>
+<li>algebraic number theory</li>
+<li>algorithmic approaches to finite-dimensional representation
+theory</li>
+<li>noetherian rings</li>
+<li>invariant theory (noncommutative and commutative)</li>
+<li>actions of algebraic transformation groups and Hopf algebras on noncommutative
+spaces</li>
+<li>applications of Koszul algebras to algebraic combinatorics</li>
+<li>ring-theoretic structure and representation theory of quantum groups and related algebras</li>
+</ul>
+<!--
+For a short slide presentation about the research of the 
+<em>Algebra and Number Theory</em> group (from November 2010),
+click <a href="algebra_number_theory.pdf">here</a>.
+-->
+</td><td>
+<img src="/includes/img/DiscsBraidsBraces.jpg" width=320 >
+</td></tr></table>
+
+<center>
+<img src="/includes/img/spec.jpg" width=300 height=180 >
+</center>
+
+
+
+
+
+<h2>Seminars</h2>
+
+
+<p>
+<a href="/events/seminars/algebra/"><b>Algebra Seminar</b></a>: 
+Besides serving as a forum for our faculty,
+students and invited speakers to report on their latest research activities, 
+the weekly departmental Algebra Seminar regularly offers more 
+leisurely paced series of three or more
+lectures on various algebraic topics.
+Our graduate students are the primary targeted audience of these mini-courses,
+but the format has met with great success among our faculty as well.
+
+Here is a list of some recent mini-courses:
+<ul>
+<li><i>Molecular vibration: group representation theory in 
+chemistry and physics</i> (6 lectures, Spring 2010)</li>
+<li><i>Operads</i> (semester-long mini-course, Fall 2010)</li>
+<li><i>Representations of $S_n$: the method of Okounkov and Vershik</i>
+(3 lectures, Spring 2011)</li>
+<li><i>A taste of algebraic geography</i> (4 lectures, Spring 2012)</li>
+<li><i>Algebraic operads and homotopy algebras</i> (semester-long 
+mini-course, Fall 2012)</li>
+<li><i>Rational homotopy theory</i> (semester-long mini-course, 
+Spring 2013)</li>
+<li><i>Introduction to group representations</i> (3 lectures, Fall 2013)</li>
+<li><i>Quantum symmetries</i> (3 lectures, Fall 2015)</li>
+<li><i>Actions of groups and Hopf algebras</i> (3 lectures, Spring 2016)</li>
+<li><i>Introduction to categories</i> (4 lectures, Fall 2017)</li>
+<li><i>Introduction to infinite Galois extensions</i> (6 lectures, 
+Spring 2018)</li>
+<li><i>Introduction to cluster algebras</i> (5 lectures and 1 exercise
+session, Fall 2018)</li>
+<li><i>Topics in Galois theory</i> (3 lectures, Spring 2019)</li>
+<li><i>Hecke algebras and Hecke operators</i> (3 lectures, Spring 2020)</li>
+</ul>
+</p>
+
+
+<p>
+<a href="/events/seminars/numbers/"><b>Number Theory Seminar</b></a>: This
+seminar was organized for many years by the late 
+<a href="https://en.wikipedia.org/wiki/Marvin_Knopp">Marvin Knopp</a>. 
+It is now hosted by nearby
+<a href="https://www.brynmawr.edu/math/seminars-and-colloquia/philadelphia-area-number-theory-seminar">Bryn Mawr College</a> and 
+continues to provide a venue for lively interactions between number 
+theorists from the greater Philadelphia area.
+</p>
+
+
+<center>
+<img src="/includes/img/Sylow.jpg" height=400 >
+</center>
+
+<h2>Graduate Studies</h2>
+
+
+<p>
+Several graduate students have completed Ph.D.s in algebra and number
+theory
+in <a href="/graduate/recentphds.html">recent years</a>. 
+Interested graduate students are encouraged to take advanced topics
+courses in these and related areas and to attend the above listed
+weekly seminars. Summer research stipends (from NSA and NSF) are currently
+available for eligible graduate students.
+</p>
+<p>
+General information about graduate study in mathematics at Temple,
+including a list of our <a href="/grad/courses">graduate courses</a>, 
+can be found on the 
+<a href="/grad/">graduate program website</a>.
+Below is a listing, with brief descriptions, of the central courses 
+specifically in Algebra
+and Number Theory. These courses provide the basic toolkit
+for aspiring algebraists or number theorists. More
+advanced courses are also offered frequently; these
+cover various topics including deformation theory, computational 
+methods in algebra, algebraic geometry, invariant theory, Lie groups etc.
+</p>
+
+
+<h3>Central Courses</h3>
+
+<table>
+<tr><td colspan="2">
+<p style="margin:.5em 0 .5em 3em; text-indent:-3em;">
+<i>8011/8012. Abstract Algebra I / II</i>, a two-semester sequence that is
+offered every year,
+is the foundational course in abstract algebra; it gives an introduction 
+to the terminology and methods of modern abstract algebra. The course 
+sequence should preferably be taken
+during the first year of graduate studies, since all other courses on 
+algebraic topics build on it. The main topics covered are: groups, rings, 
+fields, Galois theory, modules, and (multi-)linear algebra. 
+</p>
+</td></tr>
+<tr><td>
+<img src="/includes/img/RepThyPic.jpg" height="150" border="0">
+</td><td valign="top">
+<p style="margin:.5em 0 .5em 3em; text-indent:-3em;">
+<i>9012/13. Representation Theory I / II</i>.
+This is an ideal follow-up course to the 8011/12 sequence.
+Representations of groups, Lie algebras, and other algebraic structures feature in 
+many areas of mathematics besides algebra, yet the basic methods and
+results are quite accessible.
+This two-semester course is offered regularly.
+The first semester generally focuses on representations of finite groups, 
+while the second semester is mainly devoted to finite-dimensional 
+Lie algebras. 
+</p>
+</td></tr>
+<tr><td>
+<img src="/includes/img/HomolAlgPic.jpg" height="150" border="0">
+</td><td valign="top">
+<p style="margin:.5em 0 .5em 3em; text-indent:-3em;">
+<i>9011. Homological Algebra</i>
+can also be taken directly after the basic 8011/12 course. The topic
+is more abstract than representation theory and requires slightly greater
+mathematical maturity.
+Homological algebra finds widespread use in
+pure mathematics, including many areas of analysis.
+The material covered in this one-semester course includes chain 
+complexes, the rudiments of category theory, derived functors,
+and spectral sequences.
+</p>
+</td></tr>
+<tr>
+<td>
+<img src="/includes/img/quotient.jpg" width=300 height=180 >
+</td>
+<td valign="top"> <!-- colspan="2">-->
+<p style="margin:.5em 0 .5em 3em; text-indent:-3em;">
+<i>9014/15. Commutative Algebra and Algebraic Geometry I / II</i>.
+This is a year-long course on the fundamental concepts of commutative algebra and
+classical as well as modern algebraic geometry. The 8011/12 course
+sequence suffices for background, but some knowledge of rudimentary 
+point-set topology will be helpful. 
+ Topics for the first semester include: ideals of commutative 
+rings, modules, Noetherian and Artinian rings, Noether normalization, 
+Hilbert's Nullstellensatz, rings of fractions, primary decomposition, 
+discrete valuation rings 
+and the rudiments of dimension theory.  Topics for the second semester include: 
+affine and projective varieties, morphisms of algebraic varieties, 
+birational equivalence,  and basic intersection theory.  In the second 
+semester, students will also learn about schemes, morphisms of schemes, coherent 
+sheaves, and divisors. 
+</p>
+</td></tr>
+</table>
+
+</div>
+
+
+<!--#include virtual='/cgi-bin/get_footer' -->

@@ -1,0 +1,103 @@
+#news-placeholder {
+  text-align: center;
+}
+#news-placeholder h4 {
+  color: #474747;
+  margin-top: 200px;
+}
+
+.fp-main {
+  background-image: url('../img/updates.jpg');
+  right: -30px;
+}
+
+.fp-left {
+  background-color: white;
+}
+
+/* background image moved up 
+to .fp-main and is 9999px
+high. .fp-left has white background 
+so image only displays in .updates. 
+The goal is keep both .fp-left and 
+.updates display same height even as .fp-left
+grows because of large amount of text.
+*/
+
+.updates {
+  padding: 0;
+/*
+  background-size: cover; 
+  background-image: url('../img/updates.jpg'); 
+*/
+}
+.updates h3 {
+  font-family: "Liberation Sans Regular", "Arimo", sans-serif;;
+  font-size: 18px;
+  font-weight: bold;
+  color: #f5f7f6;
+  text-shadow: 2px 2px #2f3435;
+  text-align: center;
+}
+.updates hr {
+  color: #576264;
+  border: 0;
+  height: 1px;
+  background: #333;
+  opacity: 0.3;
+  width: 100%;
+}
+.updates p {
+  line-height: 20px;
+  word-wrap: break-word;
+}
+.updates a {
+  color: #fff;
+}
+.updates a:hover {
+  color: #eafbff;
+}
+.updates a.news {
+  position: absolute;
+  bottom: 18px;
+  right: 46px;
+}
+.update-item {
+  padding: 0px 23px;
+  color: #f5f7f6;
+}
+.update-item p {
+  margin-left: 60px; /* FIXME */
+  font-size: 14px;
+}
+
+.date {
+  font-family: "Arimo", sans-serif;;
+  font-weight: bold;
+  width: 36px;
+  float: left;
+}
+.date .month {
+  font-size: 16px;
+  float: right;
+  display: block;
+}
+.date .year {
+  float: right;
+}
+.visitcst {
+  background: #a41b35; 
+  color: #fff; 
+  text-transform: uppercase; 
+  font-size: 11px; 
+  font-weight: bold; 
+  letter-spacing: 1px; 
+  padding: 12px 25px; 
+  border-radius: 4px; 
+  display: block; 
+  text-align: center;
+}
+.visitcst:hover {
+  background: #981b34;
+  color: #eee;
+}

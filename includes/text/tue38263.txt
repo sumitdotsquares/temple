@@ -1,0 +1,2 @@
+<p>Sam's research interests include geometric group theory, mapping class groups, hyperbolic 3-manifolds, cubical geometry, and dynamics. In particular, he is interested in analogies between surface topology/geometry (the mapping class group, Teichmuller space, the curve complex, etc.) and the corresponding objects in the study of the outer automorphism group of the free group.</p>
+

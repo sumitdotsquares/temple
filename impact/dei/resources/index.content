@@ -1,0 +1,67 @@
+<div id="content-overview">
+
+    <div id='accordion'>
+        <span style="border: none;margin-bottom: 10px;" class="block"><b>General Readings</b></span>
+        <div class="courseblockdesc">
+            <ol type="a">
+                <li>a</li>
+                <li>b</li>
+            </ol>
+            <div class='courseblockheaddiv'> </div>
+            <p class='courseblockpart'></p>
+        </div>
+
+        <span style="border: none;margin-bottom: 10px;" class="block"><b>Hiring</b></span>
+        <div class="courseblockdesc">
+            <ol type="a">
+                <li></li>
+            </ol>
+            <div class='courseblockheaddiv'> </div>
+            <p class='courseblockpart'></p>
+        </div>
+
+        <span style="border: none;margin-bottom: 10px;" class="block"><b>Mentoring</b></span>
+        <div class="courseblockdesc">
+            <ol type="a">
+                <li></li>
+            </ol>
+            <div class='courseblockheaddiv'> </div>
+            <p class='courseblockpart'></p>
+        </div>
+
+        <span style="border: none;margin-bottom: 10px;" class="block"><b>Teaching</b></span>
+        <div class="courseblockdesc">
+            <ul>
+                <li>An AMS Blog: <a href='https://blogs.ams.org/matheducation/2017/03/06/six-ways-mathematics-instructors-can-support-diversity-and-inclusion/'>Six Ways Mathematics Instructors Can Support Diversity and Inclusion</a></li>
+                <li>From the Chronicle of Higher Education: <a href='https://www.chronicle.com/article/8-ways-to-be-more-inclusive-in-your-zoom-teaching/'>8 Ways to Be More Inclusive in Your Zoom Teaching</a></li>
+                <li>Harvard Math Department: resources on <a href='http://people.math.harvard.edu/~community/inclusive-classrooms.html'>Inclusive Classrooms</a></li>
+            </ul>
+            <div class='courseblockheaddiv'> </div>
+            <p class='courseblockpart'></p>
+        </div>
+
+        <span style="border: none;margin-bottom: 10px;" class="block"><b>Temple Resources</b></span>
+        <div class="courseblockdesc">
+            <ol type="a">
+                <li>Temple University: <a href='https://diversity.temple.edu'>Office of Institutional Diversity</a></li>
+            </ol>
+            <div class='courseblockheaddiv'> </div>
+            <p class='courseblockpart'></p>
+        </div>
+
+        <span style="border: none;margin-bottom: 10px;" class="block"><b>Mathematical Societies and Initiatives</b></span>
+        <div class="courseblockdesc">
+            <ol type="a">
+                <li><a href='https://www.nam-math.org'>National Association of Mathematicians</a></li>
+                <li>MAA: <a href='https://www.maa.org/diversity-initiative'>Diversity Initiative</a></li>
+                <li>AMS: <a href='http://www.ams.org/programs/diversity/diversity'>Equity, Diversity, and Inclusion</a></li>
+                <li>SIAM: <a href='https://www.siam.org/about-siam/committees/diversity-advisory-committee'>Diversity Advisory Committee</a></li>
+                <li>Spectra: <a href='http://lgbtmath.org'>The Association for LGBT Mathematicians</a>
+                <li><a href='http://lgbtmath.org'>Society for Advancement of Chicanos/Hispanics and Native Americans in Science</a></li>
+                <li><a href='https://algebra.org/wp'>The Algebra Project</a></li>
+            </ol>
+            <div class='courseblockheaddiv'> </div>
+            <p class='courseblockpart'></p>
+        </div>
+    </div>
+</div>

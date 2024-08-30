@@ -1,0 +1,10 @@
+Richard Berger is Research Assistant Professor in the Department of Mathematics in the College of Science and Technology working on High Performance Computing in the the Michael L. Klein group.
+
+He obtained the title <em>Diplom Ingenieur</em> in the field of Mechatronics at the Johannes Kepler University in Linz, Austria in 2012, followed by <em>Doktor der technischen Wissenschaften</em> in 2016.
+
+From 2008 to 2012 was a researcher at the Christian Doppler Laboratory for Automated Software Engineering, part of the Institute of Systemsoftware at JKU. There he worked on domain specific languages and developing new capture and replay debugging tools for automation industry.
+
+From 2013 to 2016 he was part of the Christian Doppler Laboratory for Particulate Flow Modelling at JKU. In his PhD he worked on improving the efficiency and quality of the Discrete Element Method (DEM) simulation package LIGGGHTS. He now continues to contribute to the parent project LAMMPS.
+
+He is part of the HPC team at Temple, managing cluster resources such as Owls Nest. Additional activities include developing scientific computational tools and software and education in scientific and high performance computing.
+

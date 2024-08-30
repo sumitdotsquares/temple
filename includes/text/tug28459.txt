@@ -1,0 +1,6 @@
+
+
+Shumo Cui works on high-order numerical methods for hyperbolic balance laws, as well as on second-order macroscopic models that possess self-sustaining waves, such as models for traffic flow and water flows in channels.
+
+
+

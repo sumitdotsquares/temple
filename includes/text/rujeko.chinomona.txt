@@ -1,0 +1,1 @@
+My research interests lie broadly within applied mathematics, with emphasis on the numerical solution for time dependent PDEs or ODEs, numerical analysis, and large-scale scientific computing.

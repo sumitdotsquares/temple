@@ -1,0 +1,39 @@
+.titlepane {
+    text-align: center;
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.picturepane {
+    width: 155px;
+    height: 204px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top:6px;
+    margin-bottom:6px;
+    float: center;
+    background-color: #white;
+    display: inline-block;
+    border: 1px solid #aaaaaa;
+}
+
+.ugradImage {
+    display: block;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0px;
+    height: 180px;
+}
+
+#namearea {
+    float: left;
+    width: 155px;
+    height: 12px;
+    margin: 0px;
+    margin-top: 1.8px;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+

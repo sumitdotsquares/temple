@@ -1,0 +1,97 @@
+#!/usr/bin/perl
+
+use strict;
+use CGI qw/:all/;
+use CGI::Pretty;
+use CGI::Carp 'fatalsToBrowser';
+use Text::CSV;
+use URI;
+use  Image::ExifTool 'ImageInfo';
+
+my @pwuid = getpwuid($<);
+my $owner = $pwuid[0];
+my $homedir = $pwuid[7];
+
+my $docroot = $ENV{'DOCUMENT_ROOT'};
+unless ($docroot) { $docroot = '/imports/www/math'; }
+
+my $uri = URI->new($ENV{'REQUEST_URI'},'https');
+my $uri = $uri->path();
+$uri =~ s/%([0-9A-Fa-f]{2})/chr(hex($1))/eg;
+
+#this is relative to $docroot
+my $dir = param('dir');
+$dir =~ s/$docroot//;
+unless ($dir =~ /^\//) { $dir = $uri . $dir; }
+
+my $height = param('height');
+print header;
+
+exit unless (-d $docroot . $dir);
+exit unless ($dir and $height);
+
+my $exifTool = new Image::ExifTool;
+
+my @images = get_images($docroot . $dir); 
+
+
+my $style = qq(<style>{box-sizing:border-box} .slideshow-container { text-align: center; position: relative; width:100%; }  .mySlides { display: none; } .prev, .next { cursor: pointer; position: relative; margin-top: -22px; padding: 6px; color: white; background-color: rgba(0,0,0,0.8); font-weight: bold; font-size: 18px; transition: 0.6s ease; border-radius: 0 3px 3px 0;  } .next { float: right; } .prev { float: left; } .prev:hover, .next:hover { background-color: rgba(0,0,0,0.8); } .numbertext { color: #f2f2f2; font-size: 12px; padding: 8px 12px; position: absolute; top: 0; } .active:hover { background-color: #717171; } .fade { -webkit-animation-name: fade; -webkit-animation-duration: 1.5s; animation-name: fade; animation-duration: 1.5s; } @-webkit-keyframes fade { from {opacity: .4} to {opacity: 1} } \@keyframes fade { from {opacity: .4} to {opacity: 1} } .slideshow-nav { margin-top: 10px; text-align: center; width: 100%; position: absolute; top: 50%; }</style>); 
+
+my $js = qq(
+<script>
+var slideIndex = 1; 
+showSlide(slideIndex); 
+function nextSlide() { slideIndex++; showSlide(slideIndex); } 
+function prevSlide() { slideIndex--; showSlide(slideIndex); }
+function showSlide(n) { 
+	var i; 
+	var slides = document.getElementsByClassName("mySlides"); 
+	for (i = 0; i < slides.length; i++) { slides[i].style.display = "none"; }
+	if (n > slides.length) {i = 0}
+	else if (n < 1) { i = slides.length - 1}
+	else {i = n-1}
+	slides[i].style.display = "block";
+}
+</script>
+);
+
+print "\n\n",$style,"\n\n";
+
+print '<div class="slideshow-container">',"\n\n";
+
+my $num = $#images+1;
+
+for my $counter (1..$num) {
+	print qq(<div class="mySlides"> <div> $counter / $num </div> <img src="$dir/$images[$counter-1]" height="$height px" ></div> \n);
+}
+
+print qq(
+<div class="slideshow-nav"> 
+	<a class="prev" onclick="prevSlide()">&#10094;</a> 
+	<a class="next" onclick="nextSlide()">&#10095;</a>
+</div>\n\n);
+
+print '</div>',"\n\n";
+
+print $js,"\n\n";
+
+
+
+#############################
+
+sub get_images {
+        my $dir = $_[0];
+        return unless (-d $dir);
+        opendir DIR, $dir;
+        my @dirs = readdir DIR;
+        closedir DIR;
+        my @navbar;
+	my $aspect;
+        for (@dirs) {
+                next if (/^\./);
+                my $h = $exifTool->ImageInfo($dir . '/' . $_);
+                $aspect->{$_} = $h->{'ImageHeight'}/$h->{'ImageWidth'};
+                if ($aspect->{$_}) { push @navbar, $_; }
+        }
+        return sort { $aspect->{$a} <=> $aspect->{$b} } @navbar;
+}

@@ -1,0 +1,8 @@
+
+Grosswald talks are entered in the Google calendar.
+
+The Grosswald talks are downloaded via
+
+get_grosswalds
+
+which is run whenever the main Grosswald page is loaded.

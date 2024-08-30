@@ -1,0 +1,8 @@
+<p>I'm a 7th (and final!) year PhD student under the direction of
+Matthew Stover.  My mathematical interests lie in the realm of applying
+number theoretic tools in hyperbolic geometry.  This includes totally
+geodesic surfaces, character varieties, and anything to do with
+quaternion algebras.  Non-mathematically, I'm into linguistics and bridges.
+</p>
+<!--<p>I'm a 5th year graduate student under the direction of Matthew Stover.&nbsp; My mathematical interests are arithmeticity and low dimensional hyperbolic geometry.&nbsp; Non-mathematically, I'm into linguistics and bridges.</p>
+-->

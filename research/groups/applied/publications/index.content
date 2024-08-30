@@ -1,0 +1,305 @@
+<div id="content">
+<h1>Applied Mathematics and Scientific Computing - Publications</h1>
+
+
+<h2>Recent Publications by the Group Members</h2>
+<p>
+The following listing shows recent papers by the group members
+that were published while at least one of the authors was at
+Temple University (marked in boldface).
+For links to the individual articles, please consult the respective
+faculty member's personal website (linked on the
+<a href="http://www.math.temple.edu/research/applied/">Applied
+Mathematics and Scientific Computing group website</a>).
+</p>
+
+
+<h3>2013</h3>
+<ul>
+<li><font size=-1>X. Du, E. Haber, M. Karampataki, <b>D. B. Szyld</b>,
+Varying iteration accuracy using inexact Conjugate Gradients
+in control problems governed by PDE's,
+Proceedings of the 2nd Annual International Conference on
+Computational Mathematics, Computational Geometry and Statistics (CMCGS 2013),
+Chen, Raju (ed.), Global and Technology Forum, Singapore, 29-38, 2013.
+</font></li>
+<li><font size=-1>X. Du, M. Sarkis, C. E. Schaerer, <b>D. B. Szyld</b>,
+Inexact and truncated Parareal-in-time Krylov subspace methods for
+parabolic optimal control problems,
+Electron. Trans. Numer. Anal., 40:36-57, 2013.
+</font></li>
+<li><font size=-1><b>S. Fan</b>, <b>B. Seibold</b>,
+A comparison of data-fitted first order traffic models and their second order
+generalizations via trajectory and sensor data,
+paper number 13-4853,
+Proceedings of the Transportation Research Board, 92nd Meeting, 2013. 
+</font></li>
+<li><font size=-1>Y. Farjoun, <b>B. Seibold</b>,
+Characteristic particle methods for traffic flow simulations on highway networks,
+Meshfree methods for Partial Differential Equations VI,
+Lect. Notes Comput. Sci. Eng., 89,
+Griebel, Schweitzer (ed.), Springer, 199-219, 2013.
+</font></li>
+<li><font size=-1>D. Fritzsche, A. Frommer, <b>S. Shank</b>, <b>D. B. Szyld</b>,
+Overlapping blocks by growing a partition with applications to preconditioning,
+SIAM J. Sci. Comput., 35:A453-A473, 2013.
+</font></li>
+<li><font size=-1><b>Y. Grabovsky</b>, L. Truskinovsky,
+Marginal material stability,
+J. Nonlinear Sci., 23(5):891-969, 2013.
+</font></li>
+<li><font size=-1>E. Olbrant, E. W. Larsen, M. Frank, <b>B. Seibold</b>,
+Asymptotic derivation and numerical investigation of time-dependent simplified PN equations,
+J. Comput. Phys., 238:315-336, 2013.
+</font></li>
+<li><font size=-1><b>B. Seibold</b>, Y. Farjoun,
+The sound of an evolving floating sculpture,
+Indian J. Ind. Appl. Math., 4(1):84-98., 2013.
+</font></li>
+<li><font size=-1><b>D. B. Szyld</b>, F. Xue
+Local convergence analysis of several inexact Newton-type
+algorithms for general nonlinear eigenvalue problems,
+Numerische Mathematik, 123:333-362, 2013.
+</font></li>
+<li><font size=-1>S. Xiong, <b>W.-S. Yang</b>,
+Open quantum random walks with decoherence on coins with n degrees of freedom,
+J. Stat. Phys., 152(3):473, 2013.
+</font></li>
+</ul>
+
+<h3>2012</h3>
+<ul>
+<li><font size=-1><b>P. Chidyagwai</b>, J.-C. Nave, R. R. Rosales, <b>B. Seibold</b>,
+A comparative study of the efficiency of jet schemes,
+Int. J. Numer. Anal. Model.-B, 3(3):297-306, 2012.
+</font></li>
+<li><font size=-1>O. Dubois, M. J. Gander, S. Loisel, A. St-Cyr, <b>D. B. Szyld</b>,
+The optimized Schwarz method with a coarse grid correction,
+SIAM J. Sci. Comput., 34:A421-A458, 2012.
+</font></li>
+<li><font size=-1>M. Embree, J. A. Sifuentes, <b>K. M. Soodhalter</b>, <b>D. B. Szyld</b>, <b>F. Xue</b>,
+Short-term recurrence Krylov subspace methods for nearly-Hermitian matrices,
+SIAM J. Matrix Anal. Appl., 33:480-500, 2012.
+</font></li>
+<li><font size=-1>M. J. Gander, S. Loisel, <b>D. B. Szyld</b>,
+An optimal block iterative method and preconditioner for
+banded matrices with applications to PDEs on irregular domains,
+SIAM J. Matrix Anal. Appl., 33:653-680, 2012.
+</font></li>
+<li><font size=-1>D. Klein, <b>W.-S. Yang</b>,
+Grand canonical ensembles in general relativity,
+Math. Phys. Anal. Geom., 15:61-83, 2012.
+</font></li>
+<li><font size=-1>H. Sadok, <b>D. B. Szyld</b>,
+A new look at CMRH and its relation to GMRES,
+BIT Numerical Mathematics, 52:485-501, 2012.
+</font></li>
+<li><font size=-1><b>B. Seibold</b>, R. R. Rosales, J.-C. Nave,
+Jet schemes for advection problems,
+Discrete Contin. Dyn. Syst. Ser. B, 17(4):1229-1259, 2012.
+</font></li>
+</ul>
+
+<h3>2011</h3>
+<ul>
+<li><font size=-1><b>P. Chidyagwai</b>, I. Mishev, B. Riviere,
+On the coupling of finite volume and discontinuous Galerkin
+method for elliptic problems,
+J. Comput. Appl. Math., 235(8): 2193-2204, 2011.
+</font></li>
+<li><font size=-1>
+<b>S. Fan</b>, Z. Feng, <b>S. Xiong</b> and <b>W.-S. Yang</b>,
+Convergence of quantum random walks with decoherence,
+Phys. Rev. A., 84(4):042317, 2011.
+</font></li>
+<li><font size=-1>
+Y. Farjoun, <b>B. Seibold</b>,
+An exact particle method for scalar conservation laws and its
+application to stiff reaction kinetics,
+Meshfree methods for Partial Differential Equations V,
+Lect. Notes Comput. Sci. Eng., 79,
+Griebel, Schweitzer (ed.), Springer, 105-124, 2011.
+</font></li>
+<li><font size=-1>
+M. Frank, <b>B. Seibold</b>,
+Optimal prediction for radiative transfer: A new perspective
+on moment closure,
+Kinet. Relat. Models, 4(3): 717-733, 2011.
+</font></li>
+<li><font size=-1><b>Y. Grabovsky</b>, V. A. Kucher, L. Truskinovsky,
+Lipschitz graphs and stability of phase boundaries,
+Continuum Mech. Thermodyn., 23(2): 87-123, 2011.
+</font></li>
+<li><font size=-1><b>Y. Grabovsky</b>, L. Truskinovsky,
+Roughening instability of broken extremals,
+Arch. Ration. Mech. Anal., 200(1): 183-202, 2011.
+</font></li>
+<li><font size=-1><b>D. B. Szyld</b>, <b>F. Xue</b>,
+Efficient preconditioned inner solves for inexact Rayleigh
+quotient iteration and their connections to the single-vector
+Jacobi-Davidson method,
+SIAM J. Matrix Anal. Appl., 32: 993-1018, 2011.
+</font></li>
+<li><font size=-1><b>F. Xue</b>, H. C. Elman,
+Fast inexact subspace iteration for generalized eigenvalue
+problems with spectral transformation,
+Linear Algebra Appl., 435: 601-622, 2011
+</font></li>
+<li><font size=-1>
+<b>S. Xiong</b> and <b>W.-S. Yang</b>,
+Ruin probability in the Cram&eacute;r-Lundberg model with risky investments,
+Stoch. Proc. Appl., 121(5): 1125-1137, 2011.
+</font></li>
+<li><font size=-1>X. Yang, <b>D. B. Szyld</b>, L. J. Latecki,
+Diffusion on a tensor product graph for semi-supervised
+learning and interactive image segmentation,
+Adv. Imag. Elect. Phys., 169: 147-172, 2011.
+</font></li>
+</ul>
+
+<h3>2010</h3>
+<ul>
+<li><font size=-1>Y. Farjoun, <b>B. Seibold</b>,
+A rarefaction-tracking method for conservation laws,
+J. Eng. Math, 66(1): 237-251, 2010.</font></li>
+<li><font size=-1>S. Loisel, <b>D. B. Szyld</b>,
+On the convergence of Algebraic Optimized Schwarz Methods with
+applications to elliptic problems,
+Numer. Math., 114: 697-728, 2010.</font></li>
+<li><font size=-1>
+V. H. Moll, S. Robins, <b>K. Soodhalter</b>,
+The action of Hecke operators on hypergeometric functions,
+J. Austral. Math. Soc., 89: 51-74, 2010.</font></li>
+<li><font size=-1>J.-C. Nave, R. R. Rosales, <b>B. Seibold</b>,
+A gradient-augmented level set method with an optimally local,
+coherent advection scheme,
+J. Comput. Phys., 229: 3802-3827, 2010.</font></li>
+<li><font size=-1><b>B. Seibold</b>,
+Performance of algebraic multigrid methods for non-symmetric
+matrices arising in particle methods,
+Numer. Linear Algebra Appl., 17: 433-451, 2010.</font></li>
+<li><font size=-1>
+V. Simoncini, <b>D. B. Szyld</b>,
+On the field of values of oblique projections,
+Linear Algebra Appl., 433: 810-818, 2010.</font></li>
+<li><font size=-1>
+V. Simoncini, <b>D. B. Szyld</b>,
+Interpreting IDR as a Petrov-Galerkin method,
+SIAM J. Sci. Comput., 32: 1898-1912, 2010.</font></li>
+</ul>
+
+<h3>2009</h3>
+<ul>
+<li><font size=-1>A. Elhashash, U. G. Rothblum, <b>D. B. Szyld</b>,
+Paths of matrices with the strong Perron-Frobenius property
+converging to a given matrix with the Perron-Frobenius property,
+Electron. J. Linear Algebra, 19: 90-97, 2009.</font></li>
+<li><font size=-1>A. Elhashash, <b>D. B. Szyld</b>,
+Two Characterizations of Matrices with the Perron-Frobenius Property,
+Numer. Linear Algebra Appl., 16: 863-869, 2009.</font></li>
+<li><font size=-1>Y. Farjoun, <b>B. Seibold</b>,
+An exactly conservative particle method for one dimensional
+scalar conservation laws,
+J. Comput. Phys., 228(14): 5298-5315, 2009.</font></li>
+<li><font size=-1>M. R. Flynn, A. R. Kasimov, J.-C. Nave,
+R. R. Rosales, <b>B. Seibold</b>,
+Self-sustained nonlinear waves in traffic flow,
+Phys. Rev. E, 79(5): 056113, 2009.</font></li>
+<li><font size=-1><b>Y. Grabovsky</b>,
+Exact relations for effective conductivity of fiber reinforced
+conducting composites with Hall effect via a general theory,
+SIAM J. Math. Anal., 41(3): 973-1024, 2009.</font></li>
+<li><font size=-1><b>Y. Grabovsky</b>,
+An application of the general theory of exact relations to
+fiber-reinforced conducting composites with Hall effect,
+Mechanics of Materials., 41(4): 456-462, 2009</font></li>
+<li><font size=-1><b>Y. Grabovsky</b>, T. Mengesha,
+Sufficient conditions for strong local minima: the case of C^1 extremals,
+Trans. Amer. Math. Soc., 361(3): 1495-1541, 2009</font></li>
+<li><font size=-1><b>S. Loisel</b>, <b>D. B. Szyld</b>,
+On the convergence of Optimized Schwarz Methods by way of Matrix Analysis,
+Domain Decomposition Methods in Science and Engineering XVIII,
+M. Bercovier, M. Gander, R. Kornhuber, O. B. Widlund, (edt.),
+Lecture Notes in Computational Science and Engineering, 70, Springer,
+363-370, 2009.</font></li>
+<li><font size=-1><b>S. Loisel</b>, <b>D. B. Szyld</b>,
+A maximum principle for L2-trace norms with an application to
+Optimized Schwarz Methods,
+Domain Decomposition Methods in Science and Engineering XVIII,
+M. Bercovier, M. Gander, R. Kornhuber, O. B. Widlund, (edt.),
+Lecture Notes in Computational Science and Engineering, 70, Springer,
+193-200, 2009.</font></li>
+<li><font size=-1><b>B. Seibold</b>, M. Frank,
+Optimal prediction for moment models: Crescendo diffusion
+and reordered equations,
+Continuum Mech. Thermodyn., 21(6): 511-527, 2009.</font></li>
+</ul>
+
+<h3>2008</h3>
+<ul>
+<li><font size=-1>J. Arnal, V. Migall&oacute;n, J. Penad&eacute;s, <b>D. B. Szyld</b>,
+Newton Additive and Multiplicative Schwarz Iterative Methods,
+IMA J. Numer. Anal., 28: 143-161, 2008.</font></li>
+<li><font size=-1>X. Du, <b>D. B. Szyld</b>,
+A note on the mesh independence of convergence bounds for additive
+Schwarz preconditioned GMRES,
+Numer. Linear Algebra Appl., 15: 547-557, 2008.</font></li>
+<li><font size=-1><b>X. Du</b>, <b>D. B. Szyld</b>,
+Inexact GMRES for singular linear systems,
+BIT, 48: 511-531, 2008.</font></li>
+<li><font size=-1><b>A. Elhashash</b>, <b>D. B. Szyld</b>,
+Generalizations of M-matrices which may not have a nonnegative inverse,
+Linear Algebra Appl., 249: 2435-2450, 2008.</font></li>
+<li><font size=-1><b>A. Elhashash</b>, <b>D. B. Szyld</b>,
+On general matrices having the Perron-Frobenius property,
+Electron. J. Linear Algebra, 17: 389-413, 2008.</font></li>
+<li><font size=-1><b>D. Fritzsche</b>, V. Mehrmann, <b>D. B. Szyld</b>, E. Virnik,
+An SVD approach to identifying meta-stable states of Markov chains,
+Electron. Trans. Numer. Anal., 29: 46-69, 2008.</font></li>
+<li><font size=-1>A. Frommer, R. Nabben, <b>D. B. Szyld</b>,
+Convergence of Stationary Iterative Methods for Hermitian Semidefinite
+Linear Systems and Applications to Schwarz Methods,
+SIAM J. Matrix Anal. Appl., 30: 925-938, 2008.</font></li>
+<li><font size=-1><b>S. Loisel</b>, R. Nabben, <b>D. B. Szyld</b>,
+On hybrid multigrid-Schwarz algorithms,
+J. Sci. Comput., 36: 165-175, 2008.</font></li>
+<li><font size=-1>V. Simoncini, <b>D. B. Szyld</b>,
+New conditions for non-stagnation of minimal residual methods,
+Numer. Math., 109: 477-487, 2008.</font></li>
+</ul>
+
+<h3>2007</h3>
+<ul>
+<li><font size=-1>S. Chang, L. Chen, <b>W.-S. Yang</b>,
+Spanning trees on the Sierpinski gasket,
+J. Stat. Phys., 126(3): 649-667, 2007.</font></li>
+<li><font size=-1><b>D. Fritzsche</b>, A. Frommer, <b>D. B. Szyld</b>,
+Extensions of certain graph-based algorithms or preconditioning,
+SIAM J. Sci. Comput., 29: 2144-2161, 2007.</font></li>
+<li><font size=-1><b>Y. Grabovsky</b>, T. Mengesha,
+Direct approach to the problem of strong local minima in Calculus of Variations,
+Calc. Var. Partial Differential Equations, 29(1): 59-83, 2007.</font></li>
+<li><font size=-1><b>Y. Grabovsky</b>, L. Truskinovsky,
+The flip side of buckling,
+Contin. Mech. Thermodyn., 19(3-4): 211-243, 2007.</font></li>
+<li><font size=-1>M. Sarkis, <b>D. B. Szyld</b>,
+Optimal left and right additive Schwarz preconditioning for
+Minimal Residual Methods with Euclidean and energy norms,
+Comput. Methods Appl. Mech. Engrg., 196: 1612-1621, 2007.</font></li>
+<li><font size=-1>V. Simoncini, <b>D. B. Szyld</b>,
+Recent computational developments in Krylov Subspace Methods for
+linear systems,
+Numer. Linear Algebra Appl., 14: 1-59, (2007)</font></li>
+<li><font size=-1><b>W.-S. Yang</b>, C. Liu, <b>K. Zhang</b>,
+A path integral formula with applications to quantum random
+walks in Z^d,
+J. Phys. A: Math. Theor., 40: 8487-8516, 2007.</font></li>
+</ul>
+
+<div align="right"><br>
+<a href="http://www.math.temple.edu/research/applied/">Back
+to the Applied Mathematics and Scientific Computing group website</a>
+</div>
+
+</div>
+

@@ -1,0 +1,5 @@
+
+Rider's current research is focused on random matrix theory, or the study of universal properties of the spectrum of "typical" linear operators in the infinite dimensional limit. Starting from basic quetsions in quantum mechanics and mathematical statistics, random matrix theory has grown to have implications for or connections to an enormous range of areas including information theory, operator algebras, numerical analysis, statistical mechanics and integrable systems. Rider's work on the so-called beta ensembles of random matrix theory was recognized by the (shared) 2008 Rollo Davidson Prize.
+
+Rider received his Ph.D. at Courant under Henry P. McKean.
+

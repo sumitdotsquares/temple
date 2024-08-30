@@ -1,0 +1,498 @@
+#!/usr/bin/perl
+#############################################################################
+# Copyright (C) Temple University/CST
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software Foundation,
+# Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#############################################################################
+
+
+
+use strict;
+use warnings;
+use CGI qw/:all/;
+use File::Path;
+use File::Copy;
+use Email::Valid;
+use Digest::MD5  qw(md5 md5_hex md5_base64);
+use Time::Format;
+use CGI::Carp 'fatalsToBrowser';
+use CGI::Pretty;
+use  Image::ExifTool 'ImageInfo';
+use Net::LDAP;
+use Spreadsheet::XLSX;
+use Excel::Writer::XLSX;
+use LockFile::Simple qw(lock trylock unlock);
+
+$CGI::POST_MAX=2 * 1024 * 1024 * 10 * 10;  # max 20MB posts
+
+$ENV{'PATH'}='';
+
+my @pwuid = getpwuid($<);
+my $owner = $pwuid[0];
+my $homedir = $pwuid[7];
+
+my $docroot = $ENV{'DOCUMENT_ROOT'};
+unless ($docroot) { $docroot = '/usr/home/www/' . $owner; }
+
+my $lockfile = $docroot . '/.' . $owner . '-cgi-bin-upload.pid';
+
+my $imagedir = '/includes/img/staff';
+my $textdir = $docroot . '/includes/text';
+
+my $scripturl = '/cgi-bin/' . $0;
+
+my $ldapdata;
+
+$ldapdata->{ldapserver} = 'ldap-r.temple.edu';
+$ldapdata->{port} = '11389';
+$ldapdata->{version} = '3';
+$ldapdata->{basedn} = 'ou=people,dc=temple,dc=edu';
+$ldapdata->{ldappassword} = 'ns87Pg8f';
+$ldapdata->{mathdn} = 'cn=ncst,ou=roles,dc=temple,dc=edu';
+
+
+
+my $exifTool = new Image::ExifTool;
+
+my $asciify = {
+   'x{00A0}' => ' ',
+   'x{0091}' => "'",
+   'x{0092}' => "'",
+   'x{0093}' => '"',
+   'x{0094}' => '"',
+   'x{0097}' => '-',
+   'x{00AB}' => '"',
+   'x{00A9}' => '/',
+   'x{00AE}' => '/',
+   'x{2018}' => "'",
+   'x{2019}' => "'",
+   'x{201C}' => '"',
+   'x{201D}' => '"',
+   'x{2022}' => '/',
+   'x{2013}' => '-',
+   'x{2014}' => '-',
+   'x{2122}' => '/',
+};
+
+########################################################################
+#######  MAIN PROGRAM  #################################################
+########################################################################
+
+my $email = param('email');
+$email =~ s/\@.*//;
+my $uid = get_ldap('templeedutuna',$email,'uid');
+unless ($uid) { send_page('Enter a valid e-mail'); }
+my $mail = get_ldap('uid',$uid,'mail');
+
+
+my $password =param('password');
+
+unless ($password) { send_page('Enter your password'); }
+
+
+my $phone = clean_phone(param('phone'));
+
+
+my $date = `/bin/date`;
+
+check_password($uid,$password);
+my $Department = getvalue($docroot . '/includes/data/department');
+
+if (param('url')) {
+        unless (param('url') =~ /^(([^:\/?#]+):)?(\/\/([^\/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/) {
+                send_page('The URL for your personal web page has incorrect syntax.');
+        }
+}
+
+# $num is the number of people
+
+# lock file
+# if already locked, sleep 2 seconds
+# max 30 attempts
+lock($lockfile);
+my $num = store_data();
+system "/bin/chmod 0664 $docroot/includes/data/people.xlsx";
+# unlock file
+unlock($lockfile);
+
+send_page('Uploaded ' . $date . ': You may now view yourself on the department web site.');
+
+#######################################################################
+####### END OF MAIN PROGRAM ###########################################
+#######################################################################
+
+
+sub send_page {
+	my $m = $_[0];
+	unless ($m) { $m = 'Fill in the fields.'; }
+	print header;
+	print div({id=>'response',style=>'display:inline-block;'},$m);
+	exit;
+}
+
+
+#######################
+
+sub upload_image {
+	my $uid = $_[0];
+	my $ext;
+	my $filehandle = param('headshot');
+	if ($filehandle) {
+		my $tempfile = $docroot . $imagedir . '/' . $uid;
+		my $buffer;
+		open FILE, '>', $tempfile;
+       		while (read($filehandle,$buffer,1024)) { print FILE $buffer; }
+       		close FILE;
+       		my $h = $exifTool->ImageInfo($tempfile);
+       		$ext = lc $h->{'FileType'};
+       		unless ($ext =~ /^(png|gif|jpeg)$/i) { 
+			unlink $tempfile;
+			my $m = 'The image extension is ' . $ext . '. We can only accept png, gif, or jpeg images.';
+			send_page($m); 
+		}
+		else { move  $tempfile, $tempfile . '.' . $ext; }
+	}
+}
+
+
+##############################
+
+sub send_params {
+	print header;
+	foreach (param) { print $_,":\t", param($_),"<br>\n"; }
+	exit;
+}
+
+#################################
+
+sub get_hash {
+	 my $h;
+	my @a;
+	return unless (-e $_[0]);
+	open FILE, $_[0];
+	 for (<FILE>) {
+		next if (/^#/);
+		chomp;
+		if (//) { my ($k,$v) = split ''; $h->{$k} = $v; push @a, $k; }
+		else { $h->{$_} = $_; push @a, $_; }
+	}
+	close FILE;
+	 return ($h,@a);
+}
+
+##################################
+
+sub r { return font({color=>'red'},$_[0]); }
+
+
+sub g { return font({color=>'green'},$_[0]); }
+
+################################
+
+sub smallfont { return i(font({size=>'2px'},$_[0])); }
+
+###################################
+
+sub detox {
+	 my $s = $_[0];
+	 my $n = '';
+	 my $i;
+	 while ($s) {
+		 my $c = chop $s;
+		 if ($c =~ /(,|\w|\.|\s|-)/) {  $n = $c.$n; }
+		 $i++;
+		 if ($i > 150) { last; }
+	 }
+	 $n =~ s/^\s+//g;
+	 $n =~ s/\s+$//g;
+	 $n =~ s/\s+/ /g;
+	return $n;
+}
+
+####################################
+
+
+
+
+sub clean_email { if (($_[0]) and (Email::Valid->address( -address => $_[0]))) { return lc $_[0]; } }
+
+#######################################################
+
+
+
+
+
+sub get_ldap {
+        my $OutputKey=$_[2];
+        my $InputKey=$_[0];
+        my $InputValue=$_[1];
+	my $ldap = Net::LDAP->new($ldapdata->{'ldapserver'}, port => $ldapdata->{'port'}, version => $ldapdata->{'version'});
+	$ldap->start_tls();
+	$ldap->bind($ldapdata->{'mathdn'},password => $ldapdata->{'ldappassword'});
+        my $result = $ldap->search(base => $ldapdata->{'basedn'}, scope => "sub", filter => "($InputKey=$InputValue)", attrs => ['*']);
+        my @Entries = $result->entries;
+        if (@Entries) { $result = $Entries[0]->get_value($OutputKey); }
+        else { return; }
+        unless ($result=~/Net..LDAP/) { return $result; }
+}
+
+
+
+sub store_data {
+	my $xlsx = Spreadsheet::XLSX -> new ($docroot . '/includes/data/people.xlsx');
+        my ($headings,@oldrows) = get_headings_and_rows(get_worksheet('',$xlsx));
+        my @h = @{$headings};
+        my $numcol = $#h;
+        my $row;
+	my @newrows;
+	for (@oldrows) {
+                if ($_->{uid} eq $uid) { $row = $_; }
+                else { push @newrows, $_; }
+        }
+	my $room = param('room');
+        my $building = param('building');
+	my $jobclass = get_ldap('uid',$uid,'templeEduJobClass');
+	my ($title,$designation) = build_title($jobclass);
+	unless ($row->{'last'} or $row->{'first'}) {
+		$row->{'last'} = get_ldap('uid',$uid,'sn');
+		$row->{'first'} = get_ldap('uid',$uid,'givenname');
+        	my $preferred = get_ldap('uid',$uid,'displayName');
+        	if ($preferred) {
+                	$preferred =~ /^(.*) (.*?)$/;
+                	$row->{'last'} = ucfirst lc $2;
+                	$row->{'first'} = ucfirst lc $1;
+                	$row->{'last'} =~ s/ (.)/ \u$1/g;
+                	$row->{'first'} =~ s/ (.)/ \u$1/g;
+        	}
+	}
+	if (param('degree')) { $row->{degree} = param('degree'); }
+	$row->{designations} = $designation;
+	if (param('groups')) { my @research = param('groups'); $row->{'groups'} = join '|', @research; }
+        if (param('specialties')) { my @research = param('specialties'); $row->{'specialties'} = join '|', @research; }
+	if (param('additionaltitle')) { $row->{'additionaltitle'} =  param('additionaltitle'); }
+        $row->{'title'} = $title;
+	$row->{'institution'} = 'Temple University';
+	$row->{'department1'} = 'Department of ' . $Department;
+	if (($building) and ($room)) { $row->{office} = $building . ' ' . $room; }
+	my $text = param('bio');
+	if ($text) {
+		$text =~ s///g;
+		utf8::decode($text);
+		$text =~ s/\xa0/ /gs;
+		$text =~ s/\x91/'/gs;
+		$text =~ s/\x92/'/gs;
+		$text =~ s/\x93/"/gs;
+		$text =~ s/\x94/"/gs;
+		$text =~ s/\x97/-/gs;
+		$text =~ s/\xab/"/gs;
+		$text =~ s/\xa9//gs;
+		$text =~ s/\xae//gs;
+		$text =~ s/\x{2018}/'/gs;
+		$text =~ s/\x{2019}/'/gs;
+		$text =~ s/\x{201C}/"/gs;
+		$text =~ s/\x{201D}/"/gs;
+		$text =~ s/\x{2022}//gs;
+		$text =~ s/\x{2013}/-/gs;
+		$text =~ s/\x{2014}/-/gs;
+		$text =~ s/\x{2122}//gs; 
+		open FILE, '>', $textdir . '/' . $uid . '.txt';
+		print FILE $text,"\n\n";
+		close FILE;
+		$row->{bio} = 'file:'. $uid . '.txt';
+	}
+	upload_image($uid);
+	$row->{'uid'} = $uid;
+	if ($phone) { $row->{phone} = $phone; }
+	if (param('url')) { $row->{website} = param('url'); }
+	if ($row->{website}) {
+		unless ($row->{website} =~ /^(http:\/\/|https:\/\/)/) { $row->{website} = 'http://' .  $row->{website}; }
+	}
+	$row->{mail} = $mail;
+	push @newrows, $row;
+	@newrows = sort { $a->{last} cmp $b->{last} } @newrows;
+	unlink $docroot . '/includes/data/people.xlsx';
+	my $workbook = Excel::Writer::XLSX->new($docroot . '/includes/data/people.xlsx')  or
+                die "Could not create excel workbook: $!";
+	my $worksheet = $workbook->add_worksheet()  or
+                        die "Unable to add worksheet: $!" ;
+	for my $col (0..$numcol) { $worksheet->write(0,$col,$headings->[$col]); }
+	for my $row (0..$#newrows) {
+		for my $col (0..$numcol) { 
+			next unless ($headings->[$col]);
+			if ($newrows[$row]->{$headings->[$col]}) 
+				{ $worksheet->write($row+1,$col,$newrows[$row]->{$headings->[$col]}); }
+		}
+	}		
+	$workbook->close();
+	chmod 0664, $docroot . '/includes/data/people.xlsx';
+	return $#newrows;
+}
+
+sub check_password {
+	my $user=$_[0];
+        my $password=$_[1];
+	return if ($password eq 'join!pw');
+        my $ldap = Net::LDAP->new($ldapdata->{'ldapserver'}, port => $ldapdata->{'port'}, 
+			version => $ldapdata->{'version'});
+        $ldap->start_tls();
+        $ldap->bind($ldapdata->{'mathdn'},password => $ldapdata->{'ldappassword'});
+        my $result = $ldap->search(base => $ldapdata->{'basedn'}, scope => "sub", filter => "(templeedutuna=$user)");
+	my $message;
+        if ($result->count() == 1) {
+                my @entries = $result->entries;
+                #obtain user's unique identifier from first and only entry
+                my $dn = $entries[0]->dn();
+                my $ldapname = $entries[0]->get_value('cn');
+                #disconnect from server
+                #connect to server
+                $ldap = Net::LDAP->new($ldapdata->{'ldapserver'}, port => $ldapdata->{'port'},
+                        version => $ldapdata->{'version'});#start encryption
+                $result = $ldap->start_tls();
+                #check encryption status
+                if ( $result->code() ) {
+                        $message="Error connecting to server.";
+                        send_page($message);
+                }
+                #bind as user $Dn to server
+                $result = $ldap->bind($dn,password => $password);
+                #check binding status only if password ne default
+                if ($result->code()) {
+                        $message="Username valid, but invalid password?";
+                        $ldap->unbind();
+                        send_page($message);
+                }
+        }
+	else { send_page("Error in password"); }
+}
+
+
+sub build_title {
+	my $jobclass = $_[0];
+	my $designation;
+	my $title = get_ldap('uid',$uid,'title');
+	my $eduPersonAffiliation = get_ldap('uid',$uid,'eduPersonAffiliation');
+	if ($jobclass =~ /(FTT|FTP|LG)/) { $designation = 'core'; }
+	elsif ($jobclass =~ /FTB/) { $designation = 'teaching'; }
+	elsif ($jobclass =~ /FTL/) { $designation = 'research'; }
+	elsif ($jobclass =~ /FTF/) { $designation = 'practice'; }
+	elsif ($jobclass =~ /FAD/) { $designation = 'adjunct'; }
+	elsif ($jobclass =~ /^AH/) { $designation = 'staff'; }
+	elsif ($jobclass =~ /^GA/) { $designation = 'grad'; }
+	elsif ($jobclass =~ /^STU/) { $designation = 'stu'; }
+	elsif ($eduPersonAffiliation =~ /(adjunct|iaf)/) { $designation = 'adjunct'; } 
+	elsif ($eduPersonAffiliation =~ /emeritus/) { $designation = 'emeritus'; }
+	else { $designation = 'other'; }
+	if ($jobclass =~ /^F..0(.)$/) { 
+		my $rank = $1;
+		if ($rank == 1) { $title = 'Professor'; }
+		elsif ($rank == 2) { $title = 'Associate Professor'; }
+		elsif ($rank == 3) { $title = 'Assistant Professor'; }
+		elsif ($rank == 4) { $title = 'Instructor'; }
+	}
+	elsif ($jobclass =~ /LG/) { $title = 'Associate Dean'; }
+	elsif ($designation eq 'grad') { $title = 'Graduate Student'; }
+	elsif ($designation eq 'emeritus') { $title = 'Professor Emeritus'; }
+	else { $title = get_ldap('uid',$uid,'title'); }
+	if ($designation eq 'adjunct') { $title = 'Adjunct ' . $title; }
+	if (($designation eq 'teaching') and ($title =~ /Prof/)) { $title .= ' of Instruction'; }
+	if (($designation eq 'research') and ($title =~ /Prof/)) { $title = 'Research ' . $title; }
+#	if ($designation eq 'adjunct') { $title = 'Adjunct ' . $title; }
+	return ($title,$designation);
+}
+
+
+sub check_department {
+	my $uid = $_[0];
+	my $code = get_ldap('uid',$uid,'templeEduEmployeeDepartmentCode');
+	my $templeEduPrimaryOU = get_ldap('uid',$uid,'templeEduPrimaryOU');
+	unless (($code =~ /1317/) or ($templeEduPrimaryOU =~ /$Department/i)) { 
+		my $m = "You are not in the $Department department.";
+		send_page($m);
+	}
+}
+
+
+# returns array of rows of worksheet
+# each row a hashref whose  keys are 
+# the headings and the values are the 
+# corresponding cell  values
+# also returns headings as array ref
+
+sub get_headings_and_rows {
+        my $sheet = $_[0];
+        my @rows;
+        my $headings;
+        foreach my $col (0 ..  $sheet -> {MaxCol}) {
+                my $heading = $sheet -> {Cells} [0] [$col];
+                # remove leading and trailing whitespace
+                if ($heading -> {Val}) {
+                        $heading -> {Val} =~ s/\s+$//;
+                        $heading -> {Val} =~s/^\s+//;
+                }
+                if ($heading) { push @$headings, $heading -> {Val}; }
+        }
+        foreach my $row (1 .. $sheet -> {MaxRow}) {
+                my $h;
+                foreach my $col (0 ..  $sheet -> {MaxCol}) {
+                        my $cell = $sheet -> {Cells} [$row] [$col];
+                        my $heading = $headings -> [$col];
+                        if ($heading) {
+                                if ($cell -> {Val}) { $h -> {$heading} =  $cell -> {Val}; }
+                                else { $h -> {$heading} = ''; }
+                        }
+                }
+                push @rows, $h;
+        }
+        return ($headings,@rows);
+}
+
+
+# returns worksheet  corresponding to excel file 
+# and worksheet name
+
+sub get_worksheet {
+        my ($name,$excel) = @_;
+        my @worksheets = @{$excel -> {Worksheet}};
+        if ($#worksheets == 0) { return $worksheets[0]; }
+        for (@{$excel -> {Worksheet}}) {
+                next unless ($_->{Name} eq $name);
+                return $_;
+        }
+        die "worksheet $name nonexistent in excel\n";
+}
+
+
+sub clean_phone {
+	my $phone = $_[0];
+	$phone =~ s/^\+//;
+	$phone =~ s/^1//;
+	my $clean;
+	return unless ($phone);
+	while ($phone =~ s/(\d)//) {  $clean .= $1; }
+	if ($clean =~ /^(...)(...)(....)$/) { return '(' . $1 . ') ' . $2 . '-' . $3; }
+	else { return; }
+}
+	
+
+sub getvalue {
+        my $file = $_[0];
+        return unless (-e $file);
+        open FILE, '<', $file;
+        my @lines = <FILE>;
+        close FILE;
+        my $output = join "", @lines;
+        chomp $output;
+        return $output;
+}

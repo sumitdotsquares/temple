@@ -1,0 +1,7 @@
+<!--<h2>Recent Publications</h2>
+<ul>
+<li><em><a href="../../../~hijab/springer/2016.html">I</a>ntroduction to Calculus and Classical Analysis</em>, <a href="../../../~hijab/springer/2016.html" target="_blank" rel="noopener">Springer-Verlag, 2016.</a></li>
+<li><em><span class="s1"><a href="../../../~hijab">The Hohenberg-Kohn Theorem for Markov Semigroups</a>, 2018.</span></em></li>
+<li><em><span class="s1"><a href="../../../~hijab">The Adaptive LQ Regulator</a>, 2019.</span></em></li>
+</ul>
+-->

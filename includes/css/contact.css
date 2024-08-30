@@ -1,0 +1,30 @@
+.contact {
+  margin-left: auto;
+  margin-right: auto;
+  width: 700px;
+}
+.contact input, .contact textarea {
+  margin-bottom: 12px;
+}
+
+.person-contact {
+  width: 500px !important;
+}
+.person-contact .person-details {
+  width: 100%;
+  margin-right: 0px;
+  max-width: none !important;
+}
+.req {
+  display: none;
+}
+
+#mailus {
+   float:left;
+   width:45%;
+}
+
+#directions {
+   float:right;
+   width:45%;
+}

@@ -1,0 +1,48 @@
+.phylomedicine-background, .phyloanalytics-background, .phylogenomics-background, .phylotools-background {
+  background-repeat: no-repeat;
+  margin-bottom: -80px;
+  background-size: 176px 204px;
+  background-position: 160px 60px;
+  min-height: 570px;
+}
+.phylomedicine-background > div, .phyloanalytics-background > div, .phylogenomics-background > div, .phylotools-background > div {
+  margin: 88px 160px 88px 0;
+  width: 460px;
+  float: right;
+  margin-bottom: 0;
+}
+.phylomedicine-background .icon , .phyloanalytics-background .icon, .phylogenomics-background .icon, .phylotools-background .icon {
+  margin-top: 70px;
+  margin-left: 160px;
+}
+
+.phylomedicine-background {
+  height: 909px;
+  background-image: url('../img/icon-medicine.png');
+}
+.phylomedicine-background h2 {
+  color: #df0154; /*942c43;*/
+}
+.phylogenomics-background {
+  height: 703px;
+  background-image: url('../img/icon-dna.png');
+}
+.phylogenomics-background h2 {
+  color: #6595ac;
+}
+.phyloanalytics-background {
+  height: 575px;
+  background-image: url('../img/icon-analytics.png');
+}
+.phyloanalytics-background h2 {
+  color: #faad45;
+}
+.phylotools-background {
+  height: 361px;
+  margin-bottom: 0;
+  background-size: 176px 204px, 361px;
+  background-image: url('../img/icon-tools.png');
+}
+.phylotools-background h2 {
+  color: #888862;
+}

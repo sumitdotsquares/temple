@@ -1,0 +1,117 @@
+#!/usr/bin/perl
+
+use strict;
+use CGI qw/:all/;
+use CGI::Pretty;
+use CGI::Carp 'fatalsToBrowser';
+use Text::CSV;
+use URI;
+use Net::LDAP;
+
+
+my $dir = param('dir');
+my $faculty = param('faculty');
+
+my $conf;
+
+$conf->{'ldap'}->{'server'} = 'ldap-r.temple.edu';
+$conf->{'ldap'}->{'port'} = '11389';
+$conf->{'ldap'}->{'version'} = '3';
+$conf->{'ldap'}->{'basedn'} = 'ou=people,dc=temple,dc=edu';
+$conf->{'ldap'}->{'bindpw'} = 'e3dR!123';
+$conf->{'ldap'}->{'binddn'} = 'cn=math,ou=roles,dc=temple,dc=edu';
+
+
+my $depts = {
+'13120'	=>	'Biology',
+'13130'	=>	'Chemistry',
+'13220'	=>	'Computer_and_Information_Sciences',
+'13140'	=>	'Earth_and_Environmental_Science',
+'13170'	=>	'Mathematics',
+'13100'	=>	'Physics'};
+
+my $rootdir = '/imports/skynet/Faculty_Affairs/Faculty/Departments';
+
+print header;
+
+my @ul;
+
+#############################
+
+sub getvalue {
+	my $file = $_[0];
+	return unless (-e $file);
+	open FILE, '<', $file;
+	my @lines = <FILE>;
+	close FILE;
+	return join '', @lines;
+}
+
+
+sub get_folder {
+	my $dir = $_[0];
+        # if not, remove leading and trailing /
+        $dir =~ s/^\///;
+        $dir =~ s/\/$//;
+	return unless (-d $dir);
+	opendir DIR, $dir;
+	my @dirs = readdir DIR;
+	closedir DIR;
+	my @navbar;
+	for (@dirs) { 
+		next if (/^\./);
+		my $activated = is_active($dir . '/' . $_);
+		if ($activated) { push @navbar, $_; }
+	}
+	return @navbar;
+}
+
+sub userpath {
+        my $u = shift;
+        return unless ("$u");
+        # hack
+        my $ldap = Net::LDAP->new($conf->{ldap}->{server},version => $conf->{ldap}->{version});
+        my $res = $ldap->start_tls;
+        if ($res->code()) { internal_err("LDAP unable to start TLS."); }
+        $res = $ldap->bind($conf->{ldap}->{binddn}, password => $conf->{ldap}->{bindpw});
+        if ($res->code()) { internal_err("Unable to bind with privileged DN"); }
+        $res = $ldap->search(base => 'ou=people,dc=temple,dc=edu', scope => 'one', filter => "(templeedutuna=$u)");
+        if ($res->code()) { internal_err("Unable to search."); }
+        if ($res->count != 1) { return; }
+        my $sn = $res->entry(0)->get_value('sn');
+        my $givenname = $res->entry(0)->get_value('cn');
+        $givenname =~ s/ $sn$//;
+        my $tuid = $res->entry(0)->get_value('templeEduTUid');
+        my $n = $sn.'_'.$tuid.'_'.$givenname;
+        $n =~ s/\./ /g;
+        $n =~ s/\s+/_/g;
+        $n =~ s/_+/_/g;
+        $n =~ s/_+$//;
+        $n =~ s/^_+//;
+        $ldap->unbind();
+        $ldap->disconnect();
+        for my $code (%$depts) {
+                if (-d $rootdir.'/'.$depts->{$code}.'/Tenure_Track/'.$n.'/P&T') {
+                        return $depts->{$code}.'/Tenure_Track/'.$n.'/P&T';
+                }
+                elsif (-d $rootdir.'/'.$depts->{$code}.'/Tenured/'.$n.'/P&T') {
+                        return $depts->{$code}.'/Tenured/'.$n.'/P&T';
+                }
+        }
+}
+
+sub get_hash {
+        my $f = shift;
+        my $h;
+        open FILE,  $f;
+        while (<FILE>) {
+                chomp;
+                next unless //;
+                next if /^#/;
+                next if /^$/;
+                my ($c,$d) = split '';
+                $h->{$c} = $d;
+        }
+        close FILE;
+        return $h;
+}

@@ -1,0 +1,2 @@
+<p style="text-align: justify;">I'm a PhD candidate in Applied Mathematics/Computational Neuroscience. I'm modeling multi-scale phenomena at e.g. synapses and implement hybrid dimensional models, which I solve by means of efficient numerical methods suitable for HPC platforms. I'm interested in developing numerical schemes, algorithm engineering and novel programming techniques. <br /><br />My projects are supervised by Prof. Gillian Queisser.</p>
+

@@ -1,0 +1,77 @@
+
+<!--#include virtual='/cgi-bin/get_header' -->
+
+<p>Research activities and interests in the department encompass many areas of mathematics; below is a listing of the strongly represented areas in the department. Clicking on a person's name leads to their home page; clicking on the research group's name leads to the group's page.</p>
+
+<h2> <a href="/research/groups/algebra/">Algebra and Number Theory</a></h2>
+			  	
+<ul>
+<li><a href="/~bdats/">Datskovsky, Boris:</a> algebraic number theory, analytic number theory, modular forms.</li>
+<li><a href="/~vald/">Dolgushev, Vasily:</a> noncommutative geometry,
+homological algebra, category theory and mathematical physics.</li>
+<li><a href="/~letzter/">Letzter, Edward:</a> noncommutative algebra.</li>
+<li><a href="/~lorenz/">Lorenz, Martin:</a> noncommutative ring
+theory, representation theory, invariant theory, algebraic K-theory.</li>
+<li><a href="/~notlaw/">Walton, Chelsea:</a> noncommutative algebra and noncommutative algebraic geometry.</li>
+<li><a href="/~tug30960/">Wang, Xingting:</a> noncommutative algebras, Poisson algebras, noncommutative projective algebraic geometry, cohomology theory, and noncommutative invariant theory.</li>
+</ul>
+
+<h2> <a id="analysis"></a><a href="/research/groups/analysis/">Analysis</a></h2>
+ 
+<ul>
+<li><a href="/~berhanu/">Berhanu, Shiferaw:</a> complex analysis, partial differential equations.</li>
+<li><a href="/~gutierre/">Gutierrez, Cristian:</a> partial differential equations, harmonic analysis.</li>
+<li><a href="/~gmendoza/">Mendoza, Gerardo:</a> global analysis, manifolds with singularities, partial differential equations, differential complexes.</li>
+<li><a href="http://www.math.temple.edu/~imitrea/">Mitrea, Irina</a>,
+harmonic analysis, partial differential equations, and geometric
+measure theory.</li>
+<li><a href="/~pesenson/">Pesenson, Isaac:</a> harmonic analysis on manifolds and graphs.</li>
+</ul>
+		
+<h2> <a id="applied"></a><a href="/research/groups/applied/">Applied
+Mathematics and Scientific Computing</a></h2>
+			  	
+<ul><!-- <li><a href="/~cui">Cui, Shumo:</a> higher-order numerical schemes for
+hyperbolic conservation laws, traffic modeling, well-balanced numerical
+schemes.</li>-->
+<li><a href="/~yury/">Grabovsky, Yury:</a> calculus of variations, continuum mechanics, homogenization, phase transitions.</li>
+<li><a href="/~klapper/">Klapper, Isaac:</a> fluid dynamics, microbial ecology, biofilms.</li>
+<li><a href="/~queisser">Gillian Queisser:</a> numerical methods and scientific
+computing, high-performance computing, applications in the life sciences with
+a particular focus on neuroscience.</li>
+<li><a href="/~seibold/">Seibold, Benjamin:</a> computational partial differential equations, numerical analysis, traffic modeling.</li>
+<li><a href="/people/faculty/research/">Stanhope, Shelby</a>: mathematical modeling, dynamical systems, parameter estimation, partial differentil equations. 
+<li><a href="/~szyld/">Szyld, Daniel:</a> numerical analysis and scientific
+computing, numerical linear algebra.</li>
+<li><a href="https://gtierra.wordpress.com">Tierra, Giordano:</a> modeling,
+numerical analysis and simulations (efficient and accurate) for the study of
+complex fluids and its applications in material and life sciences.</li>
+<li><a href="/~dzhou/">Zhou, Dong:</a> high order numerical schemes for
+nonlinear Hamilton-Jacobi equations and fluid flow problems.</li>
+</ul>
+
+<h2> <a id="geometry"></a><a href="/research/groups/geometry/">Geometry and Topology</a></h2>
+
+<ul> <li><a href="https://sites.temple.edu/swfu/">Fu, Ser-Wei:</a> hyperbolic
+geometry, geometric group theory, geometric structures, low-dimensional
+topology, dynamical systems, ergodic theory, billiards, and Teichmuller
+Theory.</li>
+<li><a href="/~dfuter/">Futer, David:</a> knot theory, hyperbolic geometry, low-dimensional topology.</li>
+<li><a href="/~rivin/">Rivin, Igor:</a> geometry, dynamical systems, combinatorics, group theory, crystallography.</li>
+rules, geometric group theory. </li>
+<li><a href="/~mstover">Stover, Matthew</a>: low-dimensional geometry,
+hyperbolic geometry, number theory.
+</ul>
+
+<h2> <a id="probability"></a><a href="/research/groups/probability/">Probability</a></h2>
+			  	
+<ul>
+<li><a href="/~brider">Rider, Brian</a>: probability and random matrices</li>
+<li><a href="/people/faculty/research/">Waters, Patrick</a>:  probability, random matrices, and integrable systems.
+<li><a href="/~yang/">Yang, Wei-Shih:</a> probability, quantum computing, mathematical physics.
+</ul>
+
+
+
+
+<!--#include virtual='/cgi-bin/get_footer' -->

@@ -1,0 +1,210 @@
+.person-card ul {
+  list-style-type: none;
+  padding: 0;
+  margin-left: auto;
+  margin-right: 8px;
+  font-size: 12px;
+  width: 100%;
+}
+.person-card ul > li {
+  padding-top: 4px;
+}
+.person-card img.avatar {
+  width: 220px;
+  height: 220px;
+  border-radius: 100%;
+  margin-bottom: 30px;
+}
+.person-card .info {
+  margin-left: 24px;
+  padding-bottom: 0px;
+}
+
+.name {
+  margin-bottom: 40px;
+}
+.name a {
+  font-weight: lighter;
+}
+
+.people {
+  margin-bottom: 80px;
+}
+
+.list {
+  margin-left: 80px;
+}
+
+.people-content {
+  padding: 2px 10px 2px 60px;
+}
+.people-content p {
+  line-height: 24px;
+  margin-bottom: 28px;
+  padding-left: 0;
+}
+.people-content a {
+  font-weight: bold;
+}
+
+nav.person-type {
+  margin-left: -100px;
+  padding: 20px;
+}
+nav.person-type > ul {
+  text-align: center;
+  padding-bottom: 7px;
+}
+nav.person-type > ul > li {
+  background-color: #ededed;
+  padding: 6px 8px;
+  min-width: 140px;
+  border-radius: 22px;
+  margin: 0px 13px 30px 13px;
+}
+nav.person-type > ul > li:hover {
+  background-color: #206299;
+}
+nav.person-type > ul > li > a {
+  display: block;
+  color: #727272;
+  font-weight: normal;
+  font-size: 14px;
+}
+nav.person-type > ul > li:hover > a {
+  color: #ffffff;
+}
+
+.person-category {
+  margin-left: auto;
+  margin-right: auto;
+}
+.person-category > ul {
+  margin-top: 50px;
+  padding: 0;
+}
+
+.person {
+  width: 100%;
+  margin-bottom: 30px;
+}
+.person img {
+  border-radius: 100%;
+}
+.person h4 > a {
+  color: #206299;
+}
+.person-details {
+  font-family: "Liberation Sans Regular", "Arimo", sans-serif;
+  font-size: 14px;
+}
+.person-details h4 {
+  font-family: "Liberation Sans Regular", "Arimo", sans-serif;
+  font-size: 16px;
+  letter-spacing: normal;
+  margin-bottom: 0;
+}
+.person-details a {
+  font-weight: bold;
+}
+.person-details a.person-link {
+  font-weight: normal;
+}
+
+.person-full img {
+  height: 143px;
+  width: 143px;
+}
+.person-full .person-details {
+  padding: 30px 12px 0 12px;
+}
+.person-full .person-details h4 {
+  font-size: 18px;
+}
+ul > li:nth-child(odd) .person-full {
+  float: right;
+}
+ul > li:nth-child(even) .person-full {
+  float: left;
+}
+ul > li:nth-child(odd) .person-full {
+  float: right;
+}
+ul > li:nth-child(even) .person-full {
+  float: left;
+}
+ul > li:nth-child(odd) .person-full img {
+  float: right;
+}
+ul > li:nth-child(even) .person-full img {
+  float: left;
+}
+ul > li:nth-child(odd) .person-full .person-details {
+  float: right;
+  text-align: right;
+}
+ul > li:nth-child(even) .person-full .person-details {
+  float: left;
+  text-align: left;
+}
+
+.avatar > div {
+	cursor: pointer;
+}
+
+.avatar img {
+  border: 1px solid #fff;
+}
+.avatar-bio img {
+  border: 3px solid #dcebf7;
+
+  -webkit-transition: border .2s ease-in-out; /*, padding .2s ease-in-out; */
+     -moz-transition: border .2s ease-in-out; /*, padding .2s ease-in-out; */
+       -o-transition: border .2s ease-in-out; /*, padding .2s ease-in-out; */
+          transition: border .2s ease-in-out; /*, padding .2s ease-in-out; */
+}
+.avatar-bio:hover img {
+  padding: 0;
+  border: 3px solid #b7d3ec;
+}
+
+.person-compact {
+  width: auto;
+  height: 100px;
+}
+.person-compact img {
+  height: 100px;
+  width: 100px;
+}
+.person-compact .avatar {
+  float: left;
+  margin-right: 20px;
+}
+.person-compact .person-details {
+  padding-top: 10px;
+  margin-right: 20px;
+  margin-left: 120px;
+}
+.person-compact .person-details, .person-compact h4 {
+  text-align: left;
+  font-size: 14px;
+}
+
+.details-small {
+  font-size: 11px;
+}
+
+
+.groups img {
+  height: 25px;
+  width: 25px;
+  margin-right: 5px;
+  margin-top: 5px;
+}
+
+.specialties img {
+  height: 25px;
+  width: 25px;
+  margin-right: 5px;
+  margin-top: 5px;
+}

@@ -1,0 +1,399 @@
+
+<!--#include virtual='/cgi-bin/get_header' -->
+
+
+
+
+<!-- Faculty research descriptions -->
+	<h2>
+	Faculty
+	</h2>
+
+        <!-- Ser-Wei -->
+        <p>
+<!--#include virtual='/cgi-bin/get_avatar?email=tuf78727' -->
+                <a href="https://sites.temple.edu/swfu/">Ser-Wei Fu</a>,
+        Research Assistant Professor</p>
+	<p>
+	Ser-Wei studies geometry and topology of low-dimensional manifolds. He
+        is interested in motivations and approaches in the fields of
+        hyperbolic geometry, geometric group theory, geometric structures,
+        ergodic theory, billiards, and Teichmuller theory. His research is
+        focused on the geometric aspect (length) and the topological aspect
+        (intersection number) of closed curves on surfaces. Curves and
+        surfaces, despite basic, still motivates many interdisciplinary and
+        open problems. These problems continue to serve as motivation to
+        develop new tools and techniques.
+	</p>
+	<p>
+	Fu received his Ph.D. at the University of Illinois, as a student of
+        <a href="http://www.math.uiuc.edu/~clein/">Chris Leininger</a>.
+	</p>
+
+	<!-- Dave -->
+	<p>
+<!--#include virtual='/cgi-bin/get_avatar?email=dfuter'  -->
+<a href="/~dfuter">David Futer</a>, Associate Professor
+	</p>
+	<p>
+Dave Futer	studies low-dimensional topology and geometry. A central
+	goal of his research is to relate several distict themes in
+	low-dimensional topology:
+	combinatorial descriptions 
+	of <a
+        href="http://en.wikipedia.org/wiki/3-manifold">3-manifolds</a>,
+	their (typically hyperbolic) <a
+	href="http://en.wikipedia.org/wiki/Geometrization_conjecture">
+	geometry</a>, the <a href="http://en.wikipedia.org/wiki/Geometric_group_theory">coarse geometry</a> of fundamental groups, and
+ <a
+	href="http://en.wikipedia.org/wiki/Quantum_topology">quantum
+	invariants</a> of knots and links. These distinct points of view turn out to be
+	inter-related in <a href="http://www.springer.com/mathematics/geometry/book/978-3-642-33301-9">surprising ways</a>.
+	</p>
+	<p>Futer received his Ph.D.  at Stanford University, as a student of <a href="http://en.wikipedia.org/wiki/Steven_Kerckhoff">Steve Kerckhoff</a>.</p>
+
+      <p>
+<!--#include virtual='/cgi-bin/get_avatar?email=rivin'  -->
+        <a href="/~rivin/">Igor Rivin</a> was an undergraduate at the University of Toronto, where he was fortunate enough to study with <a href="http://en.wikipdea.org/wiki/Coxeter">H. S. M. Coxeter </a>and <a href="http://www.fields.utoronto.ca/aboutus/governance/governance_BOD.html#EBierstone">Ed Bierstone.</a> He went on to study
+        with <a href="http://en.wikipedia.org/wiki/William_Thurston">Bill
+         Thurston</a> at Princeton University, and his checkered career
+        included working
+        with
+        <a href="http://en.wikipedia.org/wiki/John_McCarthy_(computer_scientist)">John
+          McCarthy</a> at Stanford (as Applications Director of the QLISP
+          project on parallel symbolic computing),
+         and with <a href="http://en.wikipedia.org/wiki/Stephen_Wolfram">Stephen
+          Wofram </a> at Wolfram Research (as Director of Advanced
+          Development for <a href="http://www.wolfram.com">Mathematica</a>,
+          before returning to pure Mathematics. His research interests
+          include hyperbolic geometry, geometry and topology of surfaces,
+          convexity, combinatorial geometry, algebraic groups, probability
+          theory, graph theory, dynamics, finance, and computational
+          crystallography, where he has a long-running research collaboration
+          with <a href="http://www.public.asu.edu/~mtreacy/">Mike Treacy</a>
+          on computational analysis
+          of <a href="http://en.wikipedia.org/wiki/Zeolites">zeolites.</a>
+        </p>
+<p>
+Rivin is currently on leave from Temple and is <a href="https://en.wikipedia.org/wiki/Regius_Professor_of_Mathematics">
+Regius Professor of Mathematics</a> at the University of St. Andrews.
+</p>
+
+
+	<!-- Matthew -->
+<p>
+<!--#include virtual='/cgi-bin/get_avatar?email=mstover' -->
+<a href="/~mstover/">Matthew Stover</a>, Assistant Professor</p>
+<p>
+Broadly, Matthew Stover is interested in the interplay between geometry, topology,
+number theory, and group theory. Most of his work is on the geometry and
+topology of <a href="https://en.wikipedia.org/wiki/Symmetric_space">locally
+symmetric manifolds</a>, 
+which are Riemannian manifolds
+closely related to discrete subgroups of <a
+href="https://en.wikipedia.org/wiki/Lie_group">Lie groups</a>, 
+and their
+generalizations, especially those spaces arising from arithmetic subgroups of
+algebraic groups. He is especially interested in using techniques from number
+theory, group theory, and algebraic geometry to understand negatively curved
+locally symmetric manifolds, like compact hyperbolic n-manifolds. More
+recently, he has started working in the other direction, applying geometric
+techniques inspired by ideas in low-dimensional topology to prove theorems in
+number theory and algebraic geometry. He also has interests in character
+varieties of finitely generated groups, which are spaces parametrizing
+representations into a fixed Lie groups, particularly for those groups
+appearing in low-dimensional topology.</p>
+
+<p>
+Stover received his Ph.D. at the University of Texas, where he was a student
+of <a href="http://www.ma.utexas.edu/users/areid/">Alan W. Reid</a>.</p>
+
+
+
+	<h2>
+	Graduate Students
+	</h2>
+
+	<!-- Dianbin  -->
+	<p>
+Dianbin Bao
+	</p>
+	<p>
+Dianbin Bao is studying identities between Hecke eigenforms, and their arithmetic
+	consequences, for congruence subgroups of the modular group.
+His thesis advisor is
+  <a href="/~mstover">Matthew Stover</a>.
+	</p>
+
+	<!-- Tim  -->
+	<p>
+Tim Morris
+	</p>
+	<p>
+Tim Morris is pursuing dissertation research on arithetic manifolds, 
+hyperbolic geometry, character varieties of 3-manifold groups, and some
+	geometric group theory.
+His thesis advisor is
+  <a href="/~mstover">Matthew Stover</a>.
+	</p>
+
+	<!-- Thomas  -->
+	<p>
+Thomas Ng
+	</p>
+	<p>
+Thomas Ng is pursuing dissertation research on 
+the interplay between geometric group theory and low-dimensional topology.  He
+	is interested in algorithmic properties of groups that arise in the
+	study of surfaces and 3-manifolds from the coarse geometry of their
+	actions on various combinatorial objects and complexes. 
+His thesis advisor is  <a href="/~dfuter">Dave Futer</a>.
+	</p>
+
+	<!-- Will  -->
+	<p>
+Will Worden
+	</p>
+	<p>
+William Worden is pursuing dissertation research on the hyperbolic geometry of
+	knot complements and other 3-manifolds. He is interested in canonical
+	triangulations of knot complements, and in particular the link between
+	combinatorial/ geometric properties of the triangulation, and
+	combinatorial properties of the knot. He is also interested in surface
+	homeomorphisms, veering triangulations of punctured surface bundles
+	(as described by Ian Agol), and commensurability of 3-manifolds. 
+His thesis advisor is  <a href="/~dfuter">Dave Futer</a>.
+	</p>
+	
+	<h2>
+	Postdoctoral Program Alumni
+	</h2>
+	<!-- Chris  -->
+	<p>
+	<!--#include virtual='/cgi-bin/get_avatar?email=atkinson' -->
+		<a href="http://facultypages.morris.umn.edu/~catkinso/">Christopher Atkinson</a>, 
+		Research Assistant Professor (2009-12)
+	</p>
+	<p>
+		Chris Atkinson studies low-dimensional geometry and topology.  His research provides an algorithmic method for estimating the volume of any non-obtuse hyperbolic polyhedron in terms of the combinatorics of its 1-skeleton.  He is currently studying realization spaces and degenerations of hyperbolic polyhedra as well as questions related to the interaction between the geometry and topology of hyperbolic 3-orbifolds.
+	</p>
+	<p>
+		Akinson received his Ph.D. at the University of
+	Illinois-Chicago, as a student of <a
+	href="http://math.berkeley.edu/~ianagol/">Ian Agol</a>. He is
+	currently a tenure-track Assistant Professor at the <a
+	href="http://www.morris.umn.edu/academic/math/faculty.html">University of
+	Minnesota, Morris</a>.
+	</p>
+	
+	<!-- Justin -->
+	<p>
+<!--#include virtual='/cgi-bin/get_avatar?email=malestein' -->
+<a href="http://www2.math.ou.edu/~jmalestein/">Justin Malestein</a>,
+	Research Assistant Professor (2009-12)</p>
+	
+	<p>	Justin Malestein's research interests lie in low-dimensional (2 or 3) geometry/topology, rigidity theory, and applied math. He does research relating algebraic properties of mapping classes of surfaces and curves on surfaces to their topological/combinatorial properties. He is also currently researching combinatorial aspects of rigidity theory, inorganic crystals known as zeolites and the relation between the two.
+	</p>
+	<p>Malestein received his Ph.D. at the University of
+	Chicago, as a student of <a
+	href="http://www.math.uchicago.edu/~farb/">Benson Farb</a>. He is
+	currently an Assistant Professor at the <a
+	href="http://www.math.ou.edu/full.php">University of Oklahoma</a>.
+	</p> 
+
+	<!-- Kei -->
+	<p>
+<!--#include virtual='/cgi-bin/get_avatar?email=nakamura' -->
+<a href="http://www.math.rutgers.edu/~kn276/">Kei
+	Nakamura</a>, Research Assistant Professor (2009-13)</p>
+	<p>
+Kei Nakamura's research interests are in low-dimensional topology and geometric group theory. These two closely related areas have always enriched each other. Nakamura primarily focuses on questions regarding 3-manifolds and their Heegaard splittings, knot theory, hyperbolic geometry, hyperbolic and relatively hyperbolic groups, mapping class groups, and the interplay between them.
+	</p>
+		<p>
+Nakamura received his Ph.D.  at the University of California, Davis as a
+	student of <a href="http://www.math.ucdavis.edu/~hass/">Joel
+	Hass</a>. He is currently a Research Associate at Rutgers University.
+		</p>
+
+<!-- Brian -->
+	<p>
+<!--#include virtual='/cgi-bin/get_avatar?email=rushton' -->
+<a href="/~brian.rushton/">Brian
+	Rushton</a>, Research Assistant Professor (2012-15)</p>
+	<p>
+Brian Rushton studies geometric group theory and low-dimensional topology,
+	focusing on 
+<a href="http://en.wikipedia.org/wiki/Finite_subdivision_rules">finite
+	subdivision rules</a> 
+for 3-manifolds. If we lived in a
+	small 3-manifold, we would see ourselves reflected across the sky in a
+	fractal-like pattern. Finite subdivision rules give a formula for such
+	a pattern, and they are used to translate combinatorial data into
+	analytic data.
+	</p>
+	<p>
+Rushton received his Ph.D. at Brigham Young University, as a student of <a
+href="http://en.wikipedia.org/wiki/James_W._Cannon">James Cannon</a>. He is
+	currently a Lecturer at Brigham Young University.
+	</p>
+
+	<!-- Louis -->
+	<p>
+<!--#include virtual='/cgi-bin/get_avatar?email=theran' -->
+<a href="http://theran.lt">Louis Theran</a>, Research Assistant Professor (2009-11)</p>
+	<p>
+Louis Theran's research interests relate to <a href="http://linkage.cs.umass.edu/pg/rigidity.html">combinatorial rigidity</a>, 
+		which relates the geometric properties objects defined by geometric constraints 
+		(e.g., <a href="http://en.wikipedia.org/wiki/File:Kenneth_Snelson_Needle_Tower.JPG">scaffolds</a>) 
+		to the combinatorial properties of their 
+		incidence structures.  Along the way, algorithms, tree decompositions of graphs, 
+		and random graphs all come up.  At the moment, 
+		Louis has been working questions arising in the study of 
+		<a href="http://en.wikipedia.org/wiki/Zeolite">zeolites</a> with 
+		<a href="/">Igor Rivin</a>.  In the distant past, Louis worked at the 
+		<a href="http://en.wikipedia.org/wiki/Open_Software_Foundation">OSF research center's</a> web group and later
+		the <a href="http://research.nokia.com/">Nokia Research Center</a>; then he decided to go to college.
+	</p>
+
+<p class = "geom">
+Theran received his Ph.D. at the Univeristy of Massachusetts, Amherst, as a student of
+<a href="http://cs.smith.edu/~streinu/">Ileana Streinu</a>. He is currently an
+Aalto Science Fellow at <a href="http://ics.aalto.fi/en/">Aalto University</a>.</p>
+
+	<h2>
+Graduate Student Alumni
+	</h2>
+	<!-- Christian  -->
+	<p>
+	<!--#include virtual='/cgi-bin/get_avatar?email=millichap' -->
+		<a href="http://www.linfield.edu/math/faculty-detail.html?id=680">Christian Millichap</a>
+	</p>
+	<p>
+Christian Millichap is pursuing research in the area of low-dimensional
+	topology and hyperbolic geometry. He is interested in the properties
+	of hyperbolic 3-manifolds that have a number of geometric invariants
+	in common, but are non-isometric. In particular, he studies how many
+	hyperbolic 3-manifolds can have the same volume or the same geodesic
+	lengths, the types of constructions used to build such geometrically
+	similar hyperbolic 3-manifolds, and relations between geometrically
+	similar hyperbolic 3-manifolds and commensurability. 
+	</p>
+<p>
+Millichap received his Ph.D. in 2015, as a student of <a
+href="/~dfuter">Dave Futer</a>. He is currently an
+Assistant Professor at <a href="http://www.linfield.edu/math.html">Linfield College</a>.
+	</p>
+	
+
+
+
+	<h2>
+		Graduate Courses in Geometry and Topology
+	</h2>
+
+	<p>Math 8061-62: Smooth Manifolds</p>
+	<p>
+	This course will be an introduction to the geometry and topology of
+	smooth manifolds. We will begin the fall semester with the
+	definitions: what does it mean for a space to (smoothly) look just
+	like R<sup>n</sup>? We will go on to study vector fields, differential
+	forms (a way to take derivatives and integrals on a manifold), and
+	Riemannian metrics. </p>
+<p class = "geom">
+In the spring semester, we'll study the interplay between the geometry of a manifold and certain ideas from algebraic topology. We will review the idea of the fundamental group and introduce homology - and then relate these algebraic notions to the underlying geometry. If time permits, we will talk a bit about hyperbolic manifolds - a family of manifolds where the interplay between topology and geometry is particularly strong and beautiful.</p>
+
+<p>Math 9061-62: Lie Groups</p>
+<p class = "geom"> This will be a course on the basic theory of Lie groups
+and Lie algebras, with a geometric point of view. We will cover the structure
+theory and classification, along with the rich geometry associated with these
+groups via the geometry of symmetric spaces. In particular, we will study the
+classification of semisimple Lie groups and apply that to classify
+low-dimensional homogeneous spaces, which are spaces that `look the same' at
+every point. The course will use some Riemannian geometry, but will also
+introduce the necessary concepts as we go along.
+</p>
+
+
+<p>Math 9023-24: Knot Theory and Low Dimensional Topology </p>
+
+<p>This course will survey the modern theory of knots, coming at
+it from several very distinct points of view. We will start at the beginning
+with projection diagrams and the tabulation problem. We will proceed to
+several classical polynomial invariants, which can be constructed via the
+combinatorics of diagrams, via representation theory, or via the topology of
+the knot complement. We will touch on braid groups and mapping class groups,
+and use these groups to show that every (closed, orientable) 3-manifold can be
+constructed via knots. Finally, we will use these constructions to gain a
+glimpse of several skein-theoretic and quantum invariants of 3-manifolds.</p>
+
+<p>Textbooks for this course include <a
+href="http://www.amazon.com/Introduction-Theory-Graduate-Texts-Mathematics/dp/038798254X/">An
+  Introduction to Knot Theory</a>,
+  by W.B. Raymond Lickorish,
+and <a
+href="http://www.amazon.com/Knots-Links-Braids-3-Manifolds-Low-Dimensional/dp/0821808982">Knots,
+  Links, Brads, and 3-Manifolds</a>,
+by V.V. Prasolov and A.B. Sossinsky.<p>
+
+	<p>The textbooks for this course are <a
+	href="http://www.amazon.com/Introduction-Smooth-Manifolds-John-Lee/dp/0387954481/ref=pd_sim_b_5">Introduction
+	to Smooth Manifolds</a> by John Lee
+and <a href="http://www.math.cornell.edu/~hatcher/AT/ATpage.html">Algebraic Topology</a> by Allen Hatcher.
+		</p>
+
+<p>Math 8161: Point-Set Topology </p>
+<p> Topics for this course include topological spaces, metric
+spaces, separation axioms, Urysohn Lemma and Metrization Theorem, continuity,
+the Tychonoff Theorem, compactification, the fundamental group, covering spaces.</p>
+<p class = "geom">Textbook: <a
+href="http://www.amazon.com/gp/search?index=books&linkCode=qs&keywords=0131816292">Topology</a>,
+by James R. Munkres.</p>
+
+<p class = "facname">Math 9210: Mapping Class Groups and Braid Groups </p>
+<p class = "geom">This course will focus on the symmetry groups of manifolds
+and cell complexes. We will look at both the geometric and algebraic
+properties of the mapping class group, which can roughly be thought of as the
+group of symmetries of a surface. One of the ways in which we will study the
+group is by designing a certain cell complex on which it acts by
+isometries. This principle has wide generalizations: one can derive a great
+deal of information about a group by constructing a geometric object for the
+group to act on.</p>
+<p class = "geom">In the spring semester, we will focus our attention on the
+braid groups, which are a special class of mapping class groups. In
+particular, we will study the representation theory of these groups, with
+connections to invariants of knots and links.</p>
+
+	<p>Math 9005: Graph Theory</p>
+	<p>
+		This course will be an introduction to graph theory.  Some of the topics covered will be:
+	</p>
+		<ul>
+			<li> Trees, connectivity, and matroids</li>
+			<li> Matchings and 2-factorizations</li>
+			<li> Planarity, duality, and graph drawing</li>
+			<li>Random graphs</li>
+		</ul>
+	<p>
+		We'll be using <a href="http://diestel-graph-theory.com/">Graph Theory</a> 
+		by Diestel as the main course text, with supplements from more 
+		specialized monographs (e.g., <a href="http://www.amazon.com/Matching-Theory-AMS-Chelsea-Publishing/dp/0821847597">Matching Theory</a> by Lovasz &amp; Plummer, <a href="http://www.oup.com/us/catalog/general/subject/Mathematics/PureMathematics/?view=usa&amp;ci=9780199202508">Matroid Theory</a> by Oxley) as necessary.
+	</p>
+
+	<p>Math 8700/CIS 9615: Analysis of Algorithms</p>
+	<p>
+		This course will cover the mathematical
+		prerequisites (combinatorics, graph theory, asymptotic analysis,
+		difference equations) needed for the design and analysis of
+		algorithms, followed by the basic topics such as:
+	</p>
+		<ul>
+		<li>Sorting</li>
+		<li>Searching</li>
+		<li>String algorithms</li>
+		<li>Dynamic programming</li>
+		<li>Basic graph algorithms (shortest paths, minimum cost spanning trees, etc.)</li>
+		<li>Network flow algorithms</li>
+		<li>Linear Programming</li>
+		</ul>
+
+<!--#include virtual='/cgi-bin/get_footer' -->

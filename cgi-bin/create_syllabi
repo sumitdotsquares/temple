@@ -1,0 +1,660 @@
+#!/usr/bin/perl
+
+#############################################################################
+# syllabus      - Provides a syllabus generating interface                  #
+# Copyright (C) 2005 College of Science & Technology, Temple University     #
+#                                                                           #
+# This program is free software; you can redistribute it and/or             #
+# modify it under the terms of the GNU General Public License               #
+# as published by the Free Software Foundation; either version 2            #
+# of the License, or (at your option) any later version.                    #
+#                                                                           #
+# This program is distributed in the hope that it will be useful,           #
+# but WITHOUT ANY WARRANTY; without even the implied warranty of            #
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             #
+# GNU General Public License for more details.                              #
+#                                                                           #
+# You should have received a copy of the GNU General Public License         #
+# along with this program; if not, write to the Free Software Foundation,   #
+# Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.           #
+#############################################################################
+
+
+use strict;
+use CGI qw/:all/;
+use Net::LDAP;
+use CGI::Pretty;
+use File::Path qw(mkpath remove_tree);
+use File::Copy;
+use CGI::Carp 'fatalsToBrowser';
+use Digest::MD5 qw(md5 md5_hex md5_base64);
+#use POSIX;
+$CGI::POST_MAX=1024 * 2000;  # max 200KB posts
+$|=1;
+
+$ENV{'PATH'}="";
+
+
+my $defaultpassword = 'syll!pw';
+my $privatekey = 'syll!pw';
+chomp(my $today = `/bin/date +%j`);
+chomp(my $now = `/bin/date`);
+
+my $docroot = $ENV{'DOCUMENT_ROOT'};
+
+my $basedir = $docroot . '/ugrad/syllabi';
+
+
+my $department = 'Mathematics';
+my @semesters = ('Spring','Summer1','Summer2','Fall');
+my @actions = ('Choose One','Create or Modify Syllabus','Delete Syllabus');
+
+chomp(my $currentday = `/bin/date +%j`);
+
+my $isvalid;
+
+my $page = param('page');
+my $action = param('action');
+my $login = param('login');
+my $password = param('password');
+
+my $course;
+if (param('course') =~ /^(\d\d\d\d)\.(\d\d\d)$/) { $course->{'number'} = $1; $course->{'section'} = $2; }
+my $year = $course->{'year'} = param('year');
+my $semester = $course->{'semester'} = param('semester');
+
+my $othercourse;
+$othercourse->{'number'} = param('othernumber');
+$othercourse->{'section'} = param('othersection');
+$othercourse->{'year'} = param('otheryear');
+unless ($othercourse->{'year'}) { $othercourse->{'year'} = $year; }
+$othercourse->{'semester'} = param('othersemester');
+unless ($othercourse->{'semester'}) { $othercourse->{'semester'} = $semester; }
+chomp(my $currentyear = `/bin/date +%Y`); 
+my @years=(2005..$currentyear+2);
+my $previousyear = $currentyear - 1 ;
+unless ($year) { $year = $currentyear; }
+
+for (@semesters,@years) { $isvalid->{$_} = 1; }
+
+unless ($semester) { 
+	if ($currentday < 132) { $semester = 'Spring';  lock_syllabi($previousyear,'Fall'); }
+	elsif ($currentday < 183) { $semester = 'Summer1'; lock_syllabi($currentyear,'Spring'); }
+	elsif ($currentday < 205) { $semester = 'Summer2'; lock_syllabi($currentyear,'Spring','Summer1'); }
+	else { $semester = 'Fall'; lock_syllabi($currentyear,'Spring','Summer1','Summer2'); }
+}
+
+# CourseMode key in @requiredfields and value for this key in $english added by me (GM) Agust 14 2020. This and a redefinition of @requiredfields in the routine send_syllabus_page are the only changes.
+
+my @requiredfields = ('CourseTitle','CourseCredits','CourseMode','CourseTime','CourseRoom','InstructorOfficeRoom','InstructorPhone','InstructorOfficeHours','CourseMaterials','CourseGrading', 'CoursePrerequisites','CourseGoals','TopicsCovered','ExamDates','AttendancePolicy');
+
+my $english = { 'CourseTitle'           =>      "the course title",
+                'CourseCredits'         =>      "the course credits",
+                'CourseMode'            =>      "the course mode",
+                'CourseTime'            =>      "the course time",
+                'CourseRoom'            =>      "the course room",
+                'InstructorOfficeRoom'  =>      "your office",
+                'InstructorPhone'       =>      "your phone number",
+                'InstructorOfficeHours' =>      "your office hours",
+                'TextBook'              =>      "the course textbooks",
+                'CourseMaterials'       =>      "the course materials",
+                'CourseGrading'         =>      "the course grading scheme",
+                'CoursePrerequisites'   =>      "any course prerequisites",
+                'CourseGoals'           =>      "your course goals",
+                'TopicsCovered'         =>      "a description of topics covered",
+                'ExamDates'             =>      "the exam dates",
+                'AttendancePolicy'      =>      "your attendance policy"};
+
+my $textfieldmax = 5000;
+
+my $numoptionalfields = 11;
+my @optionalfields = ('CourseWebPage');
+foreach (1..$numoptionalfields) { push @optionalfields, 'N'.$_.'otes'.$_.'Heading', 'NOtEs'.$_; }
+
+
+my $credentialsarevalid = 0;
+
+###########################################################
+###########################################################
+###########################################################
+
+if ($page) {
+	if ($action eq 'Log Out') { $login = ''; param('login',''); send_login_page('You are now logged out.'); }
+	else { 
+		check_year_semester($year,$semester);
+		tally_syllabi($year,$semester) if ($password eq 'tally');
+		$login = check_login($year,$semester,$login);
+		$credentialsarevalid = check_password($login,$password);
+		if ($page eq 'course') { check_othercourse($othercourse); }
+	}
+}
+
+if ($page eq 'login') { send_course_page($login,$year,$semester); }
+
+elsif ($page eq 'course') { 
+	check_course($login,$course); 
+	if ($action eq 'Create or Modify Syllabus') { send_syllabus_page($login,$course,$othercourse);  }
+	elsif ($action eq 'Delete Syllabus') { delete_syllabus($login,$course); }
+	else { send_course_page($login,$year,$semester,'Select an action.'); }
+}
+
+elsif ($page eq 'syllabus') { 
+	if ($action eq 'Previous Page') { send_course_page($login,$year,$semester); }
+	my $data = check_data($login,$course,$othercourse); 
+	store_data($login,$course,$data);
+	generate_html($login,$course,$data);
+	send_display_page($login,$course);
+}
+
+elsif ($page eq 'display') { send_syllabus_page($login,$course,$othercourse); }
+
+else { send_login_page(); }
+
+###########################################################
+###########################################################
+###########################################################
+
+
+sub get_ldap {
+        my $outkey = $_[2];
+        my $inkey = $_[0];
+        my $invalue = $_[1];
+	my $ldapserver = 'ldap-r.temple.edu';
+	my $port = '11389';
+	my $version = '3';
+        my $ldap = Net::LDAP->new($ldapserver, port => $port, version => $version);
+        my $result = $ldap->start_tls( sslversion => 'tlsv12' );
+        die $result->error() if $result->code();
+        my $mathdn = "cn=math,ou=roles,dc=temple,dc=edu";
+        my $basedn = 'ou=people,dc=temple,dc=edu';
+        my $ldappassword = "e3dR!123";
+        $result = $ldap->bind($mathdn,password => $ldappassword);
+        die $result->error() if $result->code();
+        $result = $ldap->search(base => $basedn, scope => "sub", filter => "($inkey=$invalue)", attrs => ['*']);
+        die $result->error() if $result->code();
+        my @entries = $result->entries;
+        if (@entries) { $result=$entries[0]->get_value($outkey); }
+        else { return; }
+        unless ($result=~/Net..LDAP/) { return $result; }
+}
+
+
+sub getvalue {
+        my $file = $_[0];
+        return unless (-e $file);
+        open FILE, '<', $file;
+        my @lines = <FILE>;
+        close FILE;
+        return join '', @lines;
+}
+        
+
+
+sub send_header {
+        my $html = start_form(-method=>'POST', -action=>'/cgi-bin/create_syllabi', -id=>'form0');
+	if ($credentialsarevalid) {
+		my $cn = get_ldap('templeedutuna',$login,'cn');
+		my $logout = submit(-name=>'action',-class=>'submit',-value=>"Log Out");
+                $cn = "Logged in as " . font({-color=>'green'},$cn) . $logout;
+        	$html .= p({-style=>'text-align:right;color:green;font-size:.8em;'},$cn);
+	}
+	if ($_[0]) { $html .= font({-color=>'red'},$_[0]); }
+        $html .= p;
+        return $html;
+}
+
+
+############################################################
+
+
+sub send_login_page {
+        my $html = send_header($_[0]);
+	$html .= p . 'Click ' . a({href=>'/resources/syllabi'},'here') . ' to view syllabi.'; 
+        $html .= p . " To create or modify your course syllabi for the ";
+        my @rows;
+#        push @rows, Tr(td('TU username: ').td(textfield(-name=>'login',-value=>'',-size=>'15',-maxlength=>'15')));
+        push @rows, Tr(td('TU username: ').td(textfield(-name=>'login',-value=>'',-size=>'15')));
+#        push @rows, Tr(td(' TU password: '),td(password_field(-name=>'password',-value=>'',-size=>'15',-maxlength=>'15')));
+        push @rows, Tr(td(' TU password: '),td(password_field(-name=>'password',-value=>'',-size=>'15')));
+        my $table = table(@rows);
+        $html .= select_popup('semester',$semester,@semesters) . ' ' .
+		select_popup('year',$year,@years)
+		.  " semester, please enter your " . p . $table . p .  'and click ';
+        $html .= submit(-name=>'action',-class=>'submit',-value=>"Login") . '.' . p;
+        $html .= p("  University policy requires a syllabus for each section of each course you teach. This website makes it easy.".  i("It will format your syllabus for you, so do not attempt any formatting.").b("In particular, do NOT paste text from MS word, as that will insert control characters in your syllabus.").  "You enter data only into one course section, then modify the data when you are working on another course section.");
+        $html .= hidden(-name=>'page', -value=>'login',-override=>1) . end_form;
+	print header;
+        print div({-id=>'response'},$html);
+        exit;
+}
+
+
+sub check_login {
+	my ($year,$semester,$login) = @_;
+	$login =~ s/\@.*//;
+	unless ($login) { send_login_page('Please enter a username. ' . $now); }
+	my $cn = get_ldap('templeedutuna',$login,'cn');
+	unless ($cn) { send_login_page('Please enter a valid username. ' . $now); }
+	$login = get_ldap('templeedutuna',$login,'uid');
+	my $coursedir = $basedir . '/' . $year . '/' . $semester . '/.assignments';
+	unless  (-e $coursedir . '/' . $login) { send_login_page("$cn, you are not teaching during $semester $year. "  . $now); }
+	return $login;
+}
+
+sub check_year_semester {
+	my ($year,$semester) = @_;
+	unless ($isvalid->{$year}) { send_login_page('Enter a valid year.'); }
+        unless ($isvalid->{$semester}) { send_login_page('Enter a valid semester.'); }
+	my $coursedir = $basedir . '/' . $year . '/' . $semester;
+	if (-e $coursedir . '/.locked') { send_login_page("The syllabi for $semester $year are locked and cannot be modified."); }
+        unless (-d $coursedir . '/.assignments') { send_login_page("The course assignments for $semester $year are not posted yet."); }
+}
+
+
+sub check_password {
+	my ($login,$password) = @_;
+	unless ($password) { 
+		if (param('publickey') eq md5_hex($login.$privatekey.$today)) { return 1; }
+		else { send_login_page('Enter a password. ' . $now); }
+	}
+	return 1 if ($password eq $defaultpassword);
+	my $ldapserver = 'ldap-r.temple.edu';
+        my $port = '11389';
+        my $version = '3';
+        my $ldap = Net::LDAP->new($ldapserver, port => $port, version => $version);
+        my $result = $ldap->start_tls( sslversion => 'tlsv12');
+	if ( $result->code() ) { send_login_page('Error connecting to server.1'); exit; }
+        my $mathdn = "cn=math,ou=roles,dc=temple,dc=edu";
+        my $basedn = 'ou=people,dc=temple,dc=edu';
+        my $ldappassword = "e3dR!123";
+        $result = $ldap->bind($mathdn,password => $ldappassword);
+	if ( $result->code() ) { send_login_page('Error connecting to server.2'); exit; }
+	$result = $ldap->search(base => $basedn, scope => "sub", filter => "(templeedutuna=$login)" );
+	if ( $result->count() != 1) { send_login_page('Your username is invalid.'); exit; }
+        my @entries = $result->entries;
+        my $dn = $entries[0]->dn();
+        $ldap->unbind();
+	$ldap = Net::LDAP->new($ldapserver, port => $port, version => $version);
+	$result = $ldap->start_tls( sslversion => 'tlsv12' );
+	if ( $result->code() ) { send_login_page('Error connecting to server.2'); exit; }
+        $result = $ldap->bind($dn,password => $password);
+        if ($result->code()) { 
+		my $cn = get_ldap('templeedutuna',$login,'cn');
+		send_login_page($cn . ', the password below is not valid.  ' . $now); 
+	}
+	else { $ldap->unbind(); }
+	return 1;
+}
+
+
+sub get_courses {
+	my ($login,$year,$semester) = @_;
+	my $coursedir = $basedir . '/' . $year . '/' . $semester . '/.assignments';
+	my $coursefile =  $coursedir . '/' . $login;
+        my @courses;
+        open FILE, '<', $coursefile;
+	while (<FILE>) { chomp; push @courses, $_; }
+	close FILE;
+        return @courses;
+}
+
+
+sub send_course_page {
+	my ($login,$year,$semester,$message) = @_;
+        my $html = send_header($message);
+        my @courses=("Choose One",get_courses($login,$year,$semester));
+	my $cn = get_ldap('templeedutuna',$login,'cn');
+        $html .= "Please select the course whose syllabus you wish to work on: ";
+	my $course = param('course');
+        $html .= select_popup('course',$course,@courses);
+	$html .= ', then click ' . p ; 
+        $html .= submit(-name=>'action',-class=>'submit',-value=>'Create or Modify Syllabus') . ' or ';
+	$html .= submit(-name=>'action',-class=>'submit',-value=>'Delete Syllabus').p . hr . p;
+        $html .= p("If you have several sections of the same course, you'll need to create a separate syllabus for each section.  However, for subsequent sections, you won't need to re-enter your data, as the data of the first section will be filled-in for you, if you use the device below.  You can then modify room, time, etc.");
+        $html .= p.hr;
+        $html .= p("If you prefer to use as a starting point the data of ",i("another "), "course syllabus, for example your coordinator's syllabus, or your course from a previous semester, please ").p;
+        my @steps;
+        push @steps, li("select the ".i("other ")." course's semester " . select_popup('othersemester',$othercourse->{'semester'},@semesters) . " and year " . select_popup('otheryear',$othercourse->{'year'},@years) . ',');
+        push @steps, li("  enter the ".i("other ")." course and section ".textfield(-name=>"othernumber",-value=>$othercourse->{'number'},-size=>'4',-maxlength=>'4').'.'.textfield(-name=>"othersection",-value=>$othercourse->{'section'},-size=>'3',-maxlength=>'3').',');
+        $html .= ol(@steps);
+        $html .= " then click  Modify/Create above.  Note:";
+        my @steps;
+        push @steps,li(" If your course has a coordinator, their syllabus is section 000 of the course.");
+        push @steps, li("Course numbers are 4 digits, section numbers are 3 digits, each with possibly leading zeros.");
+        $html .= ol(@steps);
+        $html .= hidden(-name=>'page', -value=>'course',-override=>1);
+	$html .= hidden(-name=>'year', -value=>$year);
+	$html .= hidden(-name=>'semester', -value=>$semester);
+	$html .= hidden(-name=>'login', -value=>$login);
+	my $publickey = md5_hex($login.$privatekey.$today);
+	$html .= hidden(-name=>'publickey', -value=>$publickey) . end_form;
+        print header;
+	print div({-id=>'response'},$html);
+        exit;
+}
+
+
+sub check_course {
+	my ($login,$course) = @_;
+	my $year = $course->{'year'};
+	my $semester = $course->{'semester'};
+        my @courses= get_courses($login,$year,$semester);
+	for (@courses) { $isvalid->{$_} = 1; }
+	unless ($isvalid->{$course->{'number'} . '.' . $course->{'section'}}) { send_course_page($login,$year,$semester,'Select a valid course. '  . $now); }
+}
+
+sub send_syllabus_page {
+	my ($login,$course,$othercourse,$message) = @_;
+	if ($message) { chomp($message .= ' ' . $now); }
+	my $year = $course->{'year'};
+	my $semester = $course->{'semester'};
+        my $data = get_previous_data($course);
+	my $otherdata = get_previous_data($othercourse);
+        my $html = send_header($message);
+	my $cn = get_ldap('templeedutuna',$login,'cn');
+# I (GM) added the following line which should be superfluous, becasue 
+# the script was forgetting the key of items submitted with empty fields.
+my @requiredfields = ('CourseTitle','CourseCredits','CourseMode','CourseTime','CourseRoom','InstructorOfficeRoom','InstructorPhone','InstructorOfficeHours','CourseMaterials','CourseGrading', 'CoursePrerequisites','CourseGoals','TopicsCovered','ExamDates','AttendancePolicy');
+        $html .= "This is the syllabus page for your ".b($course->{'number'} . '.' . $course->{'section'}) . 
+	" course for ".$semester.' '.$year.". Please enter 
+        the following information in ".b("plain text")." (no HTML, up to $textfieldmax characters per field). 
+	The field boxes below are expandable by dragging the lower right corner of each field.";
+        $html .= p . ' You may have these fields pre-filled with the data from another section (e.g. your 
+	coordinator\'s section or one of your sections from a previous semester). For this, go back to the 
+	previous page and enter the <i>other</i> course, then return here and modify appropriately. ' . p;
+	$html .= p . 'To go back, click ' . submit(-name=>'action',-class=>'submit',-value=>'Previous Page') . '. ' . 
+	'When the fields are filled, click ' . submit(-name=>'action',-class=>'submit',-value=>'Submit Syllabus') . '. ' . p;
+	$html .= "For advanced math courses, \$\\LaTeX\$ may be entered following More > Toolbox." . p;
+	unless ($data) {
+		if ($otherdata) { 
+			$html .= p . 'Below is the data for ' . $department . ' ' . $othercourse->{'number'} . '.' . $othercourse->{'section'} .  ' back from ' . $othercourse->{'semester'} . ' ' . $othercourse->{'year'} . '. Modify as needed, remember, you\'re filling out data for  ' . b($course->{'number'} . '.' . $course->{'section'}) . '.'; 
+			$data = $otherdata;
+		}
+	}
+	$html .= p. i("The following fields are required.").p;
+	unless ($data->{'CourseWebPage'}) { $data->{'CourseWebPage'} = "http://math.temple.edu/..."; }
+	unless ($data) { for (@requiredfields,@optionalfields,'CourseWebPage') { $data->{$_} = param($_); } }
+        my @rows = ();
+        for my $f (@requiredfields) {
+                push @rows, Tr(td('Enter ' . $english->{$f} . ': '), 
+		td(textarea(-name=>$f,-value=>$data->{$f}, -rows=>1, -columns=>'90',-maxlength=>$textfieldmax)));
+        }
+	for (1..$numoptionalfields ) {
+		my $a = 'N'.$_.'otes'.$_.'Heading';
+		my $b = 'NOtEs'.$_;
+                unless ($data->{$a}) { $data->{$a} = "Enter note $_ heading here"; }
+                unless ($data->{$b}) { $data->{$b} = "Enter note $_ here"; }
+        }
+        $html .= table(@rows).p.i("The following fields are optional. ").
+        "For each of the last $numoptionalfields fields, you have 
+        to enter your own heading. The note in each field will be formatted as a single paragraph.".p;
+        @rows=();
+        push @rows, Tr( td("Enter your course web URL (if any): "),
+                td(textfield({-name=>'CourseWebPage',-value=>$data->{'CourseWebPage'}, -size=>'75',-maxlength=>$textfieldmax})));
+        for  (1..$numoptionalfields) {
+		my $a = 'N'.$_.'otes'.$_.'Heading';
+		my $b = 'NOtEs'.$_;
+		push @rows,  Tr({-align=>'right'},td(textfield({-name=>$a, -value=>$data->{$a}, -size=>'33',-maxlength=>'33'})),
+                       td({-align=>'right'},textarea({-name=>$b,-value=>$data->{$b}, -rows=>1,-columns=>'75',-maxlength=>$textfieldmax})));
+        }
+        $html .= table(@rows). p. hr. p . 'When done go back to top and click ' . b('Submit Syllabus') . '.';
+        $html .= hidden(-name=>'page', -value=>'syllabus',-override=>1);
+        $html .= hidden(-name=>'year', -value=>$year);
+        $html .= hidden(-name=>'semester', -value=>$semester);
+        $html .= hidden(-name=>'login', -value=>$login);
+	$html .= hidden(-name=>'course',-value=>$course->{'number'} . '.' . $course->{'section'});
+        my $publickey = md5_hex($login.$privatekey.$today);
+        $html .= hidden(-name=>'publickey', -value=>$publickey) . end_form;
+        print header;
+	print div({-id=>'response'},$html);
+	exit;
+}
+
+sub get_previous_data {
+	my $othercourse = $_[0]; 
+	return unless ($othercourse->{'year'} and  $othercourse->{'semester'} and  $othercourse->{'number'} and  $othercourse->{'section'});
+	my $coursedir =  $basedir . '/' . $othercourse->{'year'} . '/' . 
+			$othercourse->{'semester'} . '/' . $othercourse->{'number'} . '/' . $othercourse->{'section'};
+	return unless (-e $coursedir . '/index.data');
+	my $data;
+	open DATA, $coursedir . '/index.data';
+	while (<DATA>) {
+		chomp;
+		next if (/^(Course:|InstructorEmail:|TeacHer:|Login:)/);
+		/^(.*?):(.*)$/;
+		$data->{$1} = $2;
+	}
+	close DATA;
+	return $data;
+}
+
+
+sub check_data {
+	my ($login,$course,$othercourse) = @_;
+	my $data;
+	for (@requiredfields) {
+		$data->{$_} = remove_control_chars(param($_));
+		my $alert = ucfirst $english->{$_};
+		unless ($data->{$_}) { send_syllabus_page($login,$course,$othercourse,' ' . font({-color=>'red'},$alert) . ' field is blank.'); }
+	}
+	for (@optionalfields) { $data->{$_} = remove_control_chars(param($_)); }
+	$data->{'CourseWebPage'} = remove_control_chars(param('CourseWebPage'));
+	$data->{'TeacHer'} = get_ldap('templeedutuna',$login,'cn');
+	return $data;
+}
+
+sub store_data {
+	my ($login,$course,$data) = @_;
+ 	if ($data->{'CourseWebPage'} eq "http://math.temple.edu/...") { $data->{'CourseWebPage'} = ''; }
+	my $coursedir = $basedir . '/' . $course->{'year'} . '/' . $course->{'semester'} . '/' . $course->{'number'} . '/' . $course->{'section'};
+	unless (-d $coursedir) { mkpath($coursedir); }
+        open DATA, '>', $coursedir . '/index.data';
+        for (keys %$data) { 
+		$data->{$_} =~ s/\n/ /gs; 
+                $data->{$_} =~ s/[:\.\s]$//g;
+		$data->{$_} =~ s/^\s+//g;
+		$data->{$_} =~ s/\s+$//g;
+		$data->{$_} =~ s///g;
+		$data->{$_} =~ s///g;
+                utf8::decode($data->{$_});
+                $data->{$_} =~ s/\xa0/ /gs;
+                $data->{$_} =~ s/\x91/'/gs;
+                $data->{$_} =~ s/\x92/'/gs;
+                $data->{$_} =~ s/\x93/"/gs;
+                $data->{$_} =~ s/\x94/"/gs;
+                $data->{$_} =~ s/\x97/-/gs;
+                $data->{$_} =~ s/\xab/"/gs;
+                $data->{$_} =~ s/\xa9//gs;
+                $data->{$_} =~ s/\xae//gs;
+                $data->{$_} =~ s/\x{2018}/'/gs;
+                $data->{$_} =~ s/\x{2019}/'/gs;
+                $data->{$_} =~ s/\x{201C}/"/gs;
+                $data->{$_} =~ s/\x{201D}/"/gs;
+                $data->{$_} =~ s/\x{2022}//gs;
+                $data->{$_} =~ s/\x{2013}/-/gs;
+                $data->{$_} =~ s/\x{2014}/-/gs;
+                $data->{$_} =~ s/\x{2122}//gs;
+		print DATA $_ . ':' . $data->{$_} . "\n";
+	}
+	close DATA;
+}
+
+sub generate_html {
+        my ($login,$course,$data) = @_;
+        $data->{'InstructorEmail'} = get_ldap('templeedutuna',$login,'mail');
+	$data->{'CourseNumber'} = $course->{'number'};
+	$data->{'CourseSection'} = $course->{'section'};
+	$data->{'CourseDepartment'} = $department;
+        $data->{'Semester'} = $course->{'year'};
+	$data->{'Year'} = $course->{'semester'};
+	my $template = $basedir . '/.data/index.content';
+	open CONTENT, $template; my @lines = <CONTENT>; close CONTENT;
+        for my $line (@lines) {
+                if ($line =~ /COORDINATORSECTION/) {
+                        my $string="Students: This is a coordinator syllabus template, do not use - look up your specific section's syllabus.";
+                        if ($course->{'section'} ne '000') { $line = ''; }
+                        else { $line =~ s/COORDINATORSECTION/$string/; }
+                }
+                for my $f (@optionalfields) { if (($line =~ /$f/) and ! ($data->{$f})) { $line = ''; } }
+                for my $f (@requiredfields, @optionalfields, 'CourseNumber','CourseSection','CourseDepartment','Semester','Year',
+                                'TeacHer','InstructorEmail') {
+                       next if ($f eq "Course");
+                       $data->{$f} =~ s/\.$//g;
+                       if ($data->{$f}) { $line =~ s/$f/$data->{$f}/g; }
+                }
+                next unless ($line =~ /NOtE/);
+                my $NOtEs = "";
+                for (1..$numoptionalfields ) {
+                        my $temp = $line;
+                        my $a = "N".$_."otes".$_."Heading";
+                        my $b = "NOtEs".$_;
+                        if ($data->{$a} eq "Enter note $_ here") { next; }
+                        if ($data->{$b} eq "Enter note $_ here") { next; }
+                        $data->{$b} =~ s/\.$//g;
+                        if (($data->{$b}) and  ($data->{$a})) { $temp =~ s/NOtEHeading/$data->{$a}/; $temp =~ s/NOtEText/$data->{$b}./; $NOtEs .= p($temp); }
+                }
+                if ($NOtEs) { $line = $NOtEs; }
+                else { $line = ""; } 
+        }
+	my $coursedir = $basedir . '/' . $course->{'year'} . '/' . $course->{'semester'} . '/' . $course->{'number'} . '/' . $course->{'section'};
+        open HTML, '>', $coursedir . '/index.content';
+        for my $line (@lines) { print HTML $line; }
+        close HTML;
+        chmod 0644, $coursedir . '/index.content';
+        open HTML, '>', $coursedir . '/index.html';
+        print HTML "<!--#include virtual='/cgi-bin/get_header' -->";
+        for my $line (@lines) { print HTML $line; }
+        print HTML "<!--#include virtual='/cgi-bin/get_footer' -->";
+        close HTML;
+        chmod 0644, $coursedir . '/index.content';
+}
+
+
+sub delete_syllabus {
+	my ($login,$course) = @_;
+	my $coursedir = $basedir . '/' . $course->{'year'} . '/' . $course->{'semester'} . '/' . $course->{'number'} . '/' . $course->{'section'};
+        if (-e $coursedir . '/index.data') {  
+		remove_tree($coursedir); 
+		 send_course_page($login,$year,$semester,'The course syllabus for ' . 
+		$course->{'number'} . '.' . $course->{'section'} . ' was deleted.'); 
+	}
+	else { send_course_page($login,$year,$semester,'The course ' . $course->{'number'} . '.' . $course->{'section'} . ' does not have a syllabus yet.'); }
+}	
+
+sub remove_control_chars {
+	my $s = $_[0];
+	$s =~ s///g;
+	utf8::decode($s);
+	$s =~ s/\xa0/ /gs;
+	$s =~ s/\x91/'/gs;
+	$s =~ s/\x92/'/gs;
+	$s =~ s/\x93/"/gs;
+	$s =~ s/\x94/"/gs;
+	$s =~ s/\x97/-/gs;
+	$s =~ s/\xab/"/gs;
+	$s =~ s/\xa9//gs;
+	$s =~ s/\xae//gs;
+	$s =~ s/\x{2018}/'/gs;
+	$s =~ s/\x{2019}/'/gs;
+	$s =~ s/\x{201C}/"/gs;
+	$s =~ s/\x{201D}/"/gs;
+	$s =~ s/\x{2022}//gs;
+	$s =~ s/\x{2013}/-/gs;
+	$s =~ s/\x{2014}/-/gs;
+	$s =~ s/\x{2122}//gs;
+	return $s;
+}
+
+
+sub send_display_page {
+        my ($login,$course) = @_;
+        my $html = send_header();
+	$html .= 'Here is your completed syllabus. Check it for errors!' . p . 'To go back, click ' . submit(-name=>'action',-class=>'submit',-value=>'Previous page') . '.' . p;
+	$html .= getvalue($basedir . '/' . $year . '/' . $semester . '/' . $course->{'number'} . '/' . $course->{'section'} .'/index.content');
+        $html .= hidden(-name=>'page', -value=>'display',-override=>1);
+        $html .= hidden(-name=>'year', -value=>$year);
+        $html .= hidden(-name=>'semester', -value=>$semester);
+        $html .= hidden(-name=>'login', -value=>$login);
+        $html .= hidden(-name=>'course',-value=>$course->{'number'} . '.' . $course->{'section'});
+        my $publickey = md5_hex($login.$privatekey.$today);
+        $html .= hidden(-name=>'publickey', -value=>$publickey) . end_form;
+        print header;
+        print div({-id=>'response'},$html);
+        exit;
+}
+
+
+sub select_popup {
+	my ($name,$default,@options) = @_;
+	my $html = qq(<div style="display:inline-block;"> <div class="select"> <select name=$name  id=$name>);
+	for (@options) { 
+		if ($_ eq $default) { $html .= qq(<option value="$_" selected>$_</option>\n); }
+		else { $html .= qq(<option value="$_">$_</option>\n);  }
+	}
+        $html .= "</select></div> </div>\n";
+	return $html;
+}
+
+
+sub check_othercourse {
+	my $othercourse = $_[0];
+	return unless (param('othernumber') or param('othersection'));
+	unless (param('othernumber') =~ /^\d\d\d\d$/) { send_course_page($login,$year,$semester,'Fill in the <i>other</i> course number (4 digits) or remove the <i>other</i> course section.'); }
+	unless (param('othersection') =~ /^\d\d\d$/) { send_course_page($login,$year,$semester,'Fill in the <i>other</i> course section (3 digits) or remove the <i>other</i> course number.'); }
+        my $coursedir =  $basedir . '/' . $othercourse->{'year'} . '/' .
+                $othercourse->{'semester'} . '/' . $othercourse->{'number'} . '/' . $othercourse->{'section'};
+	unless (-e $coursedir . '/index.data') { 
+		send_course_page($login,$year,$semester,'The <i>other</i> course ' . $othercourse->{'number'} . '.' . $othercourse->{'section'} . ' does not have a syllabus posted for ' . param('othersemester') .' ' . param('otheryear') . '.');
+	}
+}
+
+
+sub tally_syllabi {
+	my ($year,$semester) = @_;
+	my $coursedir = $basedir . '/' . $year . '/' . $semester . '/.assignments';
+	unless (-d $coursedir) { send_login_page('The assignments for ' . "$semester $year" . ' have not been posted yet.'); }
+	opendir DIR, $coursedir;
+	my @uids = readdir DIR;
+	closedir DIR;
+	my @notdone;
+	my $emails;
+	for my $uid (@uids) {
+		next if ($uid =~ /^\./);
+		open FILE, '<', $coursedir . '/' . $uid;
+		while (<FILE>) {
+			chomp;
+			my ($course,$section) = split '\.', $_;
+			next if ($section =~ /^(8|3)..$/);
+			next if ($course =~ /^(9|8|7)...$/);
+			my $coursefile = $basedir . '/' . $year . '/' . $semester . '/' . 
+                                $course . '/' . $section  . '/index.content';
+			unless (-e $coursefile) 
+					{ push @notdone, $_; $emails->{$uid . '@temple.edu'} = 1; }
+		}
+		close FILE;
+	}
+	if (@notdone) {
+		my $notdone = $#notdone+1;
+		my $html = "Here are the " . $notdone . " sections for " . b("$semester $year") . " whose syllabi 
+		have " . b("not") . " been posted. This is based on the latest run of the robo-mailer. This
+		list ignores Japan|Harrisburg and courses (7|8|9)xxx.";
+		$html .= p . "@notdone" . p;
+		my @emails = keys %$emails;
+		$emails = join ', ', @emails;
+		$html .= 'Here are the corresponding instructor e-mails' . p . $emails;
+		send_login_page($html);
+	}
+	else { send_login_page('All syllabi are done.'); }
+	exit;
+}
+
+
+sub lock_syllabi {
+	my ($year,@semesters) = @_;
+	for my $semester (@semesters) {
+		my $lock = $basedir . '/' . $year . '/' . $semester . '/.locked';
+		open FILE, '>', $lock;
+		print FILE '1';
+		close FILE;
+	}
+}

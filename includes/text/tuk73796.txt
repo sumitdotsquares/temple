@@ -1,0 +1,2 @@
+<p>I am currently a postdoctoral researcher in applied mathematics at Temple University. My research interests lie in parallel iterative solvers and preconditioners for&nbsp;linear systems. For more information about my research, please visit my webpage/google scholar.</p>
+

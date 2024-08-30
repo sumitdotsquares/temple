@@ -1,0 +1,40 @@
+#engagement-overview {
+  margin-top: -30px;
+  height: 100%;
+  min-height: 630px;
+  background-image: url('../img/tree.jpg');
+  background-repeat: no-repeat;
+}
+#engagement-overview > div {
+  margin: 45px 100px 203px 0;
+  float: right;
+  width: 350px;
+  height: 170px;
+}
+#engagement-overview > div > p {
+  margin-bottom: 60px;
+}
+.engagement {
+  margin-left: 100px;
+  margin-top: 68px;
+}
+.engagement-content {
+  width: 700px;
+  margin-left: 60px;
+  margin-bottom: 90px;
+}
+
+.people-block {
+  margin: -60px auto 50px auto;
+  width: 100%;
+  padding: 20px;
+  text-align: center;
+}
+
+#edu-links {
+  list-style: none;
+  padding-left: 0px;
+}
+#edu-links > li > a {
+  font-weight: normal;  
+}

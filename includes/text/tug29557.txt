@@ -1,0 +1,4 @@
+Gillian Queisser and his research group use and develop numerical methods for large-scale computing to analyze continuum-based models of three-dimensional neuronal processes on intricate morphologies. Gillian Queisser completed his PhD in 2008 at the Ruprecht-Karls University of Heidelberg, where he was also a research associate at the Simulation in Technology Research
+Group. From 2008 to 2010, he also was the independent research group leader of that university's Computational Neuroscience Research Group at the Cluster of Excellence CellNetworks. From then until he joined Temple this past summer, he was a W-1 professor in the Goethe University of Frankfurt's Department of Computer Science and Mathematics.
+
+

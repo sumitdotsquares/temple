@@ -1,0 +1,170 @@
+#!/usr/bin/perl
+
+use strict;
+use CGI qw/:all/;
+use CGI::Carp 'fatalsToBrowser';
+use Spreadsheet::XLSX;
+use URI;
+
+my @pwuid = getpwuid($<);
+my $owner = $pwuid[0];
+my $homedir = $pwuid[7];
+
+my $docroot = $ENV{'DOCUMENT_ROOT'};
+
+my $uri = URI->new($ENV{'REQUEST_URI'},'https');
+my $uri = $uri->path();
+$uri =~ s/%([0-9A-Fa-f]{2})/chr(hex($1))/eg;
+
+# extract last path component of URI
+$uri =~ /\/([^\/]*?)\/$/;
+my $designation = $1;
+
+my $xlsx = Spreadsheet::XLSX -> new ($docroot . '/includes/data/people.xlsx');
+
+my ($headings,@rows) = get_headings_and_rows(get_worksheet('',$xlsx));
+
+print header;
+
+
+
+#last,first,middle,degree,designations,id,title,institution,project,major,additionaltitle,department1,department2,gs,email,phone,office,website,avatar,bio,keywords
+
+for my $row (@rows) {
+	next if ($row->{last} =~ /^#/);
+        unless ($designation eq 'all') { 
+		if ($designation eq 'faculty') {
+			next unless (($row->{designations} =~ /core/) or
+					($row->{designations} =~ /research/) or
+					($row->{designations} =~ /teaching/));
+		}
+		else { next unless ($row->{designations} =~ /$designation/); }
+	}
+        my $pjaxanchor = a({-href=>'/cgi-bin/get_person?uid=' . $row->{uid}},b($row->{last}));
+	my $mailurl = "mailto:'" . $row->{mail} . "'";
+	$row->{mail} =~ s/\@.*//;
+	$row->{mail} = a({-href=>$mailurl},$row->{mail});
+	my @row;
+	push @row, td(div({-class=>'person-link'},$pjaxanchor));
+	push @row, td($row->{first}.' '.$row->{middle});
+	push @row, td($row->{title});
+	push @row, td($row->{mail});
+	push @row, td(clean_phone($row->{phone}));
+	push @row, td($row->{office});
+	print Tr(@row)."\n\n";
+}
+
+
+
+
+sub getvalue {
+	my $file = $_[0];
+	return unless (-e $file);
+	open FILE, '<', $file;
+	my @lines = <FILE>;
+	close FILE;
+	my $output = join "\n", @lines;
+	chomp $output;
+	return $output;
+}
+
+sub get_hash {
+         my $h;
+        my @a;
+        return unless (-e $_[0]);
+        open FILE, $_[0];
+         for (<FILE>) {
+                next if (/^#/);
+                chomp;
+                if (//) { my ($k,$v) = split ''; $h->{$k} = $v; push @a, $k; }
+                else { $h->{$_} = $_; push @a, $_; }
+        }
+        close FILE;
+         return ($h,@a);
+}
+
+sub is_active {
+        # $dir is relative to $docroot with leading /
+        my $dir = $_[0];
+        return unless (-d $docroot . $dir);
+        return unless (-e $docroot . $dir . 'index.html');
+        return unless (-e $docroot . $dir . '.title');
+        $dir =~ /^\/(.*?)\/$/;
+        return $1;
+}
+
+
+
+sub get_folder {
+        # $dir is relative to $docroot with leading and trailing /
+        my $dir = $_[0];
+        return unless (-d $docroot . $dir);
+        opendir DIR, $docroot . $dir;
+        my @dirs = readdir DIR;
+        closedir DIR;
+        my @navbar;
+        for (@dirs) {
+                next if (/^\./);
+                if (is_active($dir . $_ . '/')) { push @navbar, $_; }
+        }
+        return @navbar;
+}
+
+# returns worksheet  corresponding to excel file 
+# and worksheet name
+
+sub get_worksheet {
+        my ($name,$excel) = @_;
+        my @worksheets = @{$excel -> {Worksheet}};
+        if ($#worksheets == 0) { return $worksheets[0]; }
+        for (@{$excel -> {Worksheet}}) {
+                next unless ($_->{Name} eq $name);
+                return $_;
+        }
+        die "worksheet $name nonexistent in excel\n";
+}
+
+# returns array of rows of worksheet
+# each row a hashref whose  keys are 
+# the headings and the values are the 
+# corresponding cell  values
+# also returns headings as array ref
+
+sub get_headings_and_rows {
+        my $sheet = $_[0];
+        my @rows;
+        my $headings;
+        foreach my $col (0 ..  $sheet -> {MaxCol}) {
+                my $heading = $sheet -> {Cells} [0] [$col];
+                # remove leading and trailing whitespace
+                if ($heading -> {Val}) {
+                        $heading -> {Val} =~ s/\s+$//;
+                        $heading -> {Val} =~s/^\s+//;
+                }
+                if ($heading) { push @$headings, $heading -> {Val}; }
+        }
+        foreach my $row (1 .. $sheet -> {MaxRow}) {
+                my $h;
+                foreach my $col (0 ..  $sheet -> {MaxCol}) {
+                        my $cell = $sheet -> {Cells} [$row] [$col];
+                        my $heading = $headings -> [$col];
+                        if ($heading) {
+                                if ($cell -> {Val}) { $h -> {$heading} =  $cell -> {Val}; }
+                                else { $h -> {$heading} = ''; }
+                        }
+                }
+                push @rows, $h;
+        }
+        return ($headings,@rows);
+}
+
+sub clean_phone {
+        my $phone = $_[0];
+        $phone =~ s/^\+//;
+        $phone =~ s/^1//;
+        my $clean;
+        return unless ($phone);
+        while ($phone =~ s/(\d)//) {  $clean .= $1; }
+        if ($clean =~ /^(...)(...)(....)$/) { return '(' . $1 . ') ' . $2 . '-' . $3; }
+        else { return; }
+}

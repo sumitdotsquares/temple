@@ -1,0 +1,6 @@
+
+
+Vasily Dolgushev's research interests are in noncommutative geometry, homological algebra, category theory and mathematical physics. Most of the problems he is working on are motivated by questions in mathematical physics. His approach to these problems often involves higher algebraic structures such as homotopy algebras, higher operads, and higher categories. The solutions of these problems are applied to questions in Lie theory, algebraic geometry, and algebraic topology. Vasily's most recent works are on formality theorems and versions of the Deligne conjecture for Hochschild complexes.
+
+
+

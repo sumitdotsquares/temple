@@ -1,0 +1,92 @@
+#!/usr/bin/perl
+
+use strict;
+use CGI qw/:all/;
+use CGI::Pretty;
+use CGI::Carp 'fatalsToBrowser';
+use Text::CSV;
+use URI;
+
+my @pwuid = getpwuid($<);
+my $owner = $pwuid[0];
+my $homedir = $pwuid[7];
+
+my $docroot = $ENV{'DOCUMENT_ROOT'};
+unless ($docroot) { $docroot = '/imports/www/math'; }
+
+print header;
+
+print `/usr/bin/tree -d -L 3 $docroot`;
+
+#############################
+
+sub getvalue {
+	my $file = $_[0];
+	return unless (-e $file);
+	open FILE, '<', $file;
+	my @lines = <FILE>;
+	close FILE;
+	return join '', @lines;
+}
+
+
+sub is_active {
+        # $dir is relative to $docroot with leading and trailing /
+        my $dir = $_[0];
+        # if not, prepend and append /
+        unless ($dir =~ /^\//) { $dir = '/' . $dir; }
+        unless ($dir =~ /\/$/) { $dir .= '/'; }
+        return unless (-d $docroot . $dir);
+        return unless (-e $docroot . $dir . '.title');
+        $dir =~ /^\/(.*?)\/$/;
+        return $1;
+}
+
+
+
+
+sub get_order {
+        # $dir is relative to $docroot without leading and trailing /
+        my $dir = $_[0];
+        # if not, remove leading and trailing /
+        $dir =~ s/^\///;
+        $dir =~ s/\/$//;
+        my $order;
+        return unless (-d $docroot . '/' . $dir);
+        opendir DIR, $docroot . '/' . $dir;
+        my @dirs = readdir DIR;
+        closedir DIR;
+        for (@dirs) {
+                next if (/^\./);
+                next unless (-d $docroot . '/' . $dir . '/' . $_);
+                $order->{$_} = 1000;
+        }
+        return $order unless (-e $docroot . '/' . $dir . '/.order');
+        open FILE, $docroot . '/' . $dir . '/.order';
+        my @dirs = <FILE>;
+        close FILE;
+        chomp @dirs;
+        for (0..$#dirs) { $order->{$dirs[$_]} = $_+1; }
+        return $order;
+}
+                                                      
+
+sub get_folder {
+        # $dir is relative to $docroot without leading and trailing /
+        my $dir = $_[0];
+        # if not, remove leading and trailing /
+        $dir =~ s/^\///;
+        $dir =~ s/\/$//;
+        return unless (-d $docroot . '/' . $dir);
+        my $order = get_order($dir);
+        opendir DIR, $docroot . '/' . $dir;
+        my @dirs = readdir DIR;
+        closedir DIR;
+        my @navbar;
+        for (@dirs) {
+                next if (/^\./);
+                my $activated = is_active($dir . '/' . $_);
+                if ($activated) { push @navbar, $_; }
+        }
+        return sort { $order->{$a} <=> $order->{$b} } @navbar;
+}

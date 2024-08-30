@@ -1,0 +1,20 @@
+#!/usr/bin/perl
+
+use strict;
+use CGI qw/:all/;
+
+
+my $username = param('username');
+
+chomp(my $valid = `/usr/bin/id $username 2> /dev/null`);
+
+my $text = '[enter username to view].';
+
+if ($valid and $username) {
+	chomp(my $homedir = `/bin/echo ~$username`);
+	my @components = split '/', $homedir;
+	@components = map { b({-style=>'color:red;'},$_) } @components;
+	$text = 'folder ' . $components[3] . ', then into folder ' . $components[4] . ', then into folder ' . $components[5] . '.';
+}
+
+print header, span({-id=>'path'},$text);

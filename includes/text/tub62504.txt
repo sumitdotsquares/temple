@@ -1,0 +1,6 @@
+
+
+Dong Zhou works on high-order time-stepping for initial-boundary-value problems, and on finite element methods for incompressible flows, in particular pressure Poisson equation reformulations with electric boundary conditions. He also works on high-order approaches for Hamilton-Jacobi equations, as well as jet schemes.
+
+
+

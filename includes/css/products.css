@@ -1,0 +1,119 @@
+#products-overview {
+  background-image: url('../img/doctor.jpg');
+  background-repeat: no-repeat;
+  background-position: right;
+  background-size: 282px 424px;
+  height: 510px;
+  margin-top: -34px;
+  margin-right: 69px;
+  padding-top: 60px;
+  margin-bottom: 45px;
+}
+#products-overview > div {
+  margin-top: 20px;
+  margin-left: 70px;
+  width: 460px;
+  height: 108px;
+}
+#products-overview > div > p {
+  background-image: url('../img/p4.png');
+  background-repeat: no-repeat;
+  background-position: bottom;
+  padding-bottom: 90px;
+  padding-left: 0;
+}
+
+#book {
+  background-size: cover;
+  padding-top: 90px;
+  padding-left: 100px;
+  padding-bottom: 134px;
+}
+
+.products-underflow {
+  margin-left: 100px;
+}
+.products-overflow {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.book {
+  text-align: center;
+  margin-bottom: 4px;
+  margin-left: -120px;
+}
+.book img {
+  height: 475px;
+  width: 340px;
+}
+.book-description {
+  margin-top: 30px;
+  margin-left: -30px;
+  width: 380px;
+}
+.purchase {
+  padding: 30px;
+  text-align: center;
+}
+
+.website-showcase {
+  background-color: #545154;
+  background-size: cover;
+  height: 350px;
+  padding: 50px;
+  text-align: center;
+}
+.website-showcase img {
+  height: 405px;
+}
+.website-description {
+  margin-top: 50px;
+  margin-bottom: 90px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.website-description {
+  width: 580px;
+}
+.website-description li {
+  margin-bottom: 15px;
+}
+
+.metrics  {
+  margin-top: 30px;
+  padding: 20px;
+}
+.metrics > table {
+  width: 400px;
+}
+
+#autofill {
+  margin-left: -150px;
+  width: 960px;
+}
+
+.stats strong {
+  color: #2f3435;
+}
+.software-image {
+  height: 62px;
+  width: 334px;
+  margin-top: 60px;
+  margin-left: -60px;
+  margin-bottom: 40px;
+}
+.mega-head {
+  font-family: "Calibri";
+  font-size: 18px;
+  font-weight: 700;
+}
+.mega-head-sub {
+  font-family: "Calibri";
+  font-size: 16px;
+  font-weight: 400;
+  color: #a5a5a5;
+}
+.mega-visit {
+  font-weight: 400;
+}

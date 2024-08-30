@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-111409548-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-111409548-1');
+    </script>
+    <!-- End Google Analytics -->
+    <meta charset="utf-8">
+    <meta name="google-site-verification" content="XhsIzKFgITUqC9pqE1aXwUa6ctC2o4MFjft19BCWY-k" />
+    <title>Temple Mathematics</title>
+    <link rel="stylesheet" href="/includes/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/includes/fonts/stylesheet.css">
+    <link rel="stylesheet" href="/includes/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/includes/css/styles.css">
+    <link rel="stylesheet" href="/includes/css/sweet-alert.css">
+    <link rel="stylesheet" href="/includes/css/people.css">
+    <link rel="stylesheet" href="/includes/css/research.css">
+    <link rel="stylesheet" href="/includes/css/home.css">
+    <link rel="stylesheet" href="/includes/css/contact.css">
+    <link rel="stylesheet" href="/includes/css/ugrad_picture_gallery.css">
+    <script src="/includes/js/jquery-2.0.3.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="/includes/js/jquery.pjax.js"></script>
+    <script src="/includes/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"> </script>
+    <script type="text/x-mathjax-config"> MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], processEscapes: true } }); </script>
+
+    <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+
+    <script>
+        $(function() {
+            $("#accordion").accordion({
+                collapsible: true,
+                heightStyle: "content",
+                header: "span",
+                active: false
+            });
+        });
+
+    </script>
+</head>
+
+<body>
+    <div id="container">
+        <!--  Container start -->
+
+        <!--  TUalert start -->
+        <div id="tu-alert-wrapper" class="tu-alert-active" style="padding: 10px 15px; text-align: center; background: #FCB813;">
+            <div class="tu-alert__boundary">
+                <h2><span class="tu-alert__message__title"><span class="tu-alert__message__severity"><b>Latest Updates for the Return to Campus:</b> <a href="https://www.temple.edu/coronavirus" target="_blank" class="tu-alert-message"><b>Read More</b></a></span></span></h2>
+            </div>
+        </div>
+        <!--  TUalert end -->
+
+        <header>
+            <div class="grid">
+                <div class="secondary">
+                    <nav class="nav-secondary">
+                        <ul>
+                            <li>
+                                <a href="/resources/toolbox/join" class="">JOIN</a>
+                            </li>
+                            <!--
+		  <li>
+                <a href="/calendar" class="">CALENDAR</a>
+              </li>
+             -->
+                            <li>
+                                <a href="/contact" class="">CONTACT US</a>
+                            </li>
+                            <li>
+                                <a href="/people/directory/all">DIRECTORY</a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <a class="visitcst" href="http://cst.temple.edu/visitcst">Visit CST</a>
+                </div>
+                <h1> <a class="cst-logo" target="_blank" href="http://cst.temple.edu"></a></h1>
+                <h1>
+                    <a class="math-logo" href="/"></a>
+                </h1>
+                NAVBAR
+            </div>
+        </header>

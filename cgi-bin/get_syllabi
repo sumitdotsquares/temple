@@ -1,0 +1,104 @@
+#!/usr/bin/perl
+
+use CGI qw/:all/;
+
+use strict;
+
+my $docroot = $ENV{'DOCUMENT_ROOT'};
+
+my $syllabi = '/ugrad/syllabi';
+
+my $year = get_param('year');
+my $semester = get_param('semester');
+my $course = get_param('course');
+my $section = get_param('section');
+
+
+print header;
+
+
+if (($year) and ($semester) and ($course) and ($section)) {
+#	print send_html($syllabi . '/' . $year . '/' . $semester . '/' . $course . '/' . $section);
+	my $html = getvalue($docroot . $syllabi . '/' . $year . '/' . $semester . '/' . $course . '/' . $section .'/index.content');
+	print div({-id=>'html'},$html);
+}
+elsif (($year) and ($semester) and ($course)) {
+	my @sections = get_folders($docroot . $syllabi . '/' . $year . '/' . $semester . '/' . $course);
+	print build_select('section',@sections);
+}
+elsif (($year) and ($semester)) {
+        my @courses = get_folders($docroot . $syllabi . '/' . $year . '/' . $semester);
+        print build_select('course',@courses);
+}
+elsif ($year) {
+        my @semesters = get_folders($docroot . $syllabi . '/' . $year);
+        print build_select('semester',@semesters);
+}
+else { 
+	my @years = get_folders($docroot . $syllabi);
+	print build_select('year',@years);
+}
+
+print "\n",div({id=>'place-holder'},'');
+
+
+
+sub get_folders {
+	my $dir = $_[0];
+	return unless (-d $dir);
+	opendir DIR, $dir;
+	my @dirs = readdir DIR;
+	closedir DIR;
+	my @units;
+	for (@dirs) {
+		next if (/^\./);
+		next unless (-d $dir . '/' . $_);
+		push @units, $_;
+	}
+	return reverse @units;
+}	
+
+
+sub build_select {
+	my ($name,@options) = @_;
+	my $Name = ucfirst $name;
+	if ($name eq 'year') { @options = reverse sort @options; }
+	else { @options = sort @options; }
+	@options = ('Choose '.$Name, @options);
+	#return popup_menu(-name=>$name,-id=>$name,-values=>\@options);
+	return select_popup($name,'',@options);
+}
+
+sub send_html {
+	my $link = $_[0];
+	return 'Click ' . a({-href=>$link,-id=>'link'},' here ') . ' for the syllabus.';
+}
+
+sub get_param {
+	my $var = $_[0];
+	if (param($var) =~ /undefined/) { return ''; }
+	else { return param($var); }
+}
+
+
+sub getvalue {
+        my $file = $_[0];
+        return unless (-e $file);
+        open FILE, '<', $file;
+        my @lines = <FILE>;
+        close FILE;
+        return join '', @lines;
+}
+
+sub select_popup {
+        my ($name,$default,@options) = @_;
+        my $html = qq(<div style="display:inline-block;"> <div class="select"> <select name=$name  id=$name>);
+        for (@options) {
+                if ($_ eq $default) { $html .= qq(<option value="$_" selected>$_</option>\n); }
+                else { $html .= qq(<option value="$_">$_</option>\n);  }
+        }
+        $html .= "</select></div> </div>\n";
+        return $html;
+}
+
+

@@ -1,0 +1,6 @@
+
+
+Currently involved in research and development related to computational processes for diagnostics and prognostics of machinery system condition based health monitoring. Using classification learners, fuzzy logic and neural networks to classify state of variables.
+
+
+

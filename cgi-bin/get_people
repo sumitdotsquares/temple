@@ -1,0 +1,149 @@
+#!/usr/bin/perl
+
+use strict;
+use CGI qw/:all/;
+use CGI::Carp 'fatalsToBrowser';
+use Text::CSV;
+use Spreadsheet::XLSX;
+use URI;
+
+my @pwuid = getpwuid($<);
+my $owner = $pwuid[0];
+my $homedir = $pwuid[7];
+
+my $docroot = $ENV{'DOCUMENT_ROOT'};
+
+my $textdir = $docroot . '/includes/text';
+
+
+my $docroot = $ENV{'DOCUMENT_ROOT'};
+unless ($docroot) { $docroot = '/usr/home/www/math'; }
+
+my $uri = URI->new($ENV{'REQUEST_URI'},'https');
+my $uri = $uri->path();
+$uri =~ s/%([0-9A-Fa-f]{2})/chr(hex($1))/eg;
+
+# extract last path component of URI
+$uri =~ /\/([^\/]*?)\/$/;
+my $designation = $1;
+if ($uri eq '/people/') { $designation = 'all'; }
+
+my $xlsx = Spreadsheet::XLSX -> new ($docroot . '/includes/data/people.xlsx');
+
+my ($headings,@rows) = get_headings_and_rows(get_worksheet('',$xlsx));
+
+@rows = sort { $a->{'last'} cmp $b->{'last'} } sort { $a->{'first'} cmp $b->{'first'} } @rows;
+
+print header;
+
+my $default_html = getvalue($docroot . '/includes/html/person.html');
+
+my $data;
+
+my @html;
+
+my $imagedir = '/includes/img/staff';
+
+for my $row (@rows) { 
+	next if ($row->{last} =~ /^#/);
+        unless ($designation eq 'all') {
+                next unless  (  ($row->{designations} =~ /(^|,|\|)$designation(,|\||$)/) or
+                                ($row->{groups} =~ /(^|,|\|)$designation(,|\||$)/) or
+                                ($row->{specialties} =~ /(^|,|\|)$designation(,|\||$)/));
+        }
+# next line added to omit 'emeriti' from 'all' people listing
+	next if (($designation eq 'all') and ($row->{designations} =~/emeritus/));
+	next if (($uri =~ /research/) and ($row->{designations} =~ /(adjunct|emeritus|teaching)/));
+	next if ($row->{last} eq 'last');
+	next unless ($row->{uid});
+	$row->{avatar} = $imagedir . '/' . get_avatar($row->{uid}); 
+	my $html = $default_html;
+        if ($row->{'additionaltitle'}) { $row->{'title'} .= '<br> ' . $row->{'additionaltitle'}; $row->{'title'} =~ s/\|/<br\/>/g; }
+        if ($row->{'research'}) { $row->{'displayemail'} = $row->{'research'} . '<br/>' . $row->{'mail'}; }
+        else { $row->{'displayemail'} =  $row->{'email'}; }
+	for ('first','last','research','displayemail','mail','uid','title','avatar') { 
+		my $UC = uc $_; 
+		my $replac = $row->{$_}; 
+		$html =~ s/$UC/$replac/g;
+	}
+        push @html, $html;
+}
+
+print ul({-class=>'row'},@html);
+
+
+#################################
+#################################
+
+sub getvalue {
+	my $file = $_[0];
+	return unless (-e $file);
+	open FILE, '<', $file;
+	my @lines = <FILE>;
+	close FILE;
+	my $output = join "\n", @lines;
+	return $output;
+}
+
+# returns array of rows of worksheet
+# each row a hashref whose  keys are 
+# the headings and the values are the 
+# corresponding cell  values
+# also returns headings as array ref
+
+sub get_headings_and_rows {
+        my $sheet = $_[0];
+        my @rows;
+        my $headings;
+        foreach my $col (0 ..  $sheet -> {MaxCol}) {
+                my $heading = $sheet -> {Cells} [0] [$col];
+                # remove leading and trailing whitespace
+                if ($heading -> {Val}) {
+                        $heading -> {Val} =~ s/\s+$//;
+                        $heading -> {Val} =~s/^\s+//;
+                }
+                if ($heading) { push @$headings, $heading -> {Val}; }
+        }
+        foreach my $row (1 .. $sheet -> {MaxRow}) {
+                my $h;
+                foreach my $col (0 ..  $sheet -> {MaxCol}) {
+                        my $cell = $sheet -> {Cells} [$row] [$col];
+                        my $heading = $headings -> [$col];
+                        if ($heading) {
+                                if ($cell -> {Val}) { $h -> {$heading} =  $cell -> {Val}; }
+                                else { $h -> {$heading} = ''; }
+                        }
+                }
+                push @rows, $h;
+        }
+        return ($headings,@rows);
+}
+
+# returns worksheet  corresponding to excel file 
+# and worksheet name
+
+sub get_worksheet {
+        my ($name,$excel) = @_;
+        my @worksheets = @{$excel -> {Worksheet}};
+        if ($#worksheets == 0) { return $worksheets[0]; }
+        for (@{$excel -> {Worksheet}}) {
+                next unless ($_->{Name} eq $name);
+                return $_;
+        }
+        die "worksheet $name nonexistent in excel\n";
+}
+
+
+sub get_avatar {
+        my $uid = $_[0];
+        opendir DIR, $docroot . '/includes/img/staff';
+        my @headshots = readdir DIR;
+        closedir DIR;
+        my $headshot;
+        for (@headshots) {
+                next unless (/^$uid\./);
+                $headshot = $_;
+        }
+        unless ($headshot) { $headshot = 'default.jpeg'; }
+        return $headshot;
+}

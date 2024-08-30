@@ -1,0 +1,28 @@
+
+<!--#include virtual='/cgi-bin/get_header' -->
+
+
+<div id="grid" class="grid people">
+	
+<p>
+Click on last name to go to the person's page.
+</p>
+
+
+	<table class="table table-striped table-hover clearfix">
+	<thead>
+		<th> Last Name </th>
+		<th> First Name </th>
+		<th> Title </th>
+		<th> Email Address </th>
+		<th> Phone Number </th>
+		<th> Office </th>
+	</thead>
+	<tbody>
+		<!--#include virtual='/cgi-bin/get_directory' -->      
+	</tbody>
+	</table>
+
+</div>
+
+<!--#include virtual='/cgi-bin/get_footer' -->

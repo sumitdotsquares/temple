@@ -1,0 +1,2 @@
+<p>Ignatova is interested in Partial Differential Equations relevant to physics, engineering and biology. Her recent research interests include fluid-structure interactions -- the dynamics of elastic bodies immersed in fluids, surface quasigeostrophic equations in bounded domains -- a geophysical model related to the evolution of temperature fronts, and the Nernst-Planck-Navier-Stokes system, describing ionic diffusion in fluids.</p>
+

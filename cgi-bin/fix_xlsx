@@ -1,0 +1,269 @@
+#!/usr/bin/perl
+#############################################################################
+# Copyright (C) Temple University/CST
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software Foundation,
+# Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#############################################################################
+
+
+
+use strict;
+use warnings;
+use CGI qw/:all/;
+use File::Path;
+use File::Copy;
+use Email::Valid;
+use Digest::MD5  qw(md5 md5_hex md5_base64);
+use Time::Format;
+use CGI::Carp 'fatalsToBrowser';
+use CGI::Pretty;
+use  Image::ExifTool 'ImageInfo';
+use Net::LDAP;
+use Spreadsheet::XLSX;
+use Excel::Writer::XLSX;
+use LockFile::Simple qw(lock trylock unlock);
+
+$CGI::POST_MAX=2 * 1024 * 1024 * 10 * 10;  # max 20MB posts
+
+$ENV{'PATH'}='';
+
+my $lockfile = '/var/tmp/www-math-cgi-bin-upload.pid';
+
+my @pwuid = getpwuid($<);
+my $owner = $pwuid[0];
+my $homedir = $pwuid[7];
+
+my $docroot = $ENV{'DOCUMENT_ROOT'};
+unless ($docroot) { $docroot = '/usr/home/www/math'; }
+
+my $imagedir = '/includes/img/staff';
+my $textdir = $docroot . '/includes/text';
+
+my $scripturl = '/cgi-bin/' . $0;
+
+my $ldapdata;
+
+$ldapdata->{ldapserver} = 'ldap-r.temple.edu';
+$ldapdata->{port} = '11389';
+$ldapdata->{version} = '3';
+$ldapdata->{basedn} = 'ou=people,dc=temple,dc=edu';
+$ldapdata->{ldappassword} = 'ns87Pg8f';
+$ldapdata->{mathdn} = 'cn=ncst,ou=roles,dc=temple,dc=edu';
+
+my $is_group;
+for ('algebra','analysis','applied','geometry','probability') { $is_group->{$_} = 1; }
+
+my $exifTool = new Image::ExifTool;
+
+my $asciify = {
+   'x{00A0}' => ' ',
+   'x{0091}' => "'",
+   'x{0092}' => "'",
+   'x{0093}' => '"',
+   'x{0094}' => '"',
+   'x{0097}' => '-',
+   'x{00AB}' => '"',
+   'x{00A9}' => '/',
+   'x{00AE}' => '/',
+   'x{2018}' => "'",
+   'x{2019}' => "'",
+   'x{201C}' => '"',
+   'x{201D}' => '"',
+   'x{2022}' => '/',
+   'x{2013}' => '-',
+   'x{2014}' => '-',
+   'x{2122}' => '/',
+};
+
+########################################################################
+#######  MAIN PROGRAM  #################################################
+########################################################################
+
+#send_params();
+
+
+store_data();
+system "/bin/chmod 0664 $docroot/includes/data/people.xlsx";
+
+#######################################################################
+####### END OF MAIN PROGRAM ###########################################
+#######################################################################
+
+
+sub get_hash {
+	 my $h;
+	my @a;
+	return unless (-e $_[0]);
+	open FILE, $_[0];
+	 for (<FILE>) {
+		next if (/^#/);
+		chomp;
+		if (//) { my ($k,$v) = split ''; $h->{$k} = $v; push @a, $k; }
+		else { $h->{$_} = $_; push @a, $_; }
+	}
+	close FILE;
+	 return ($h,@a);
+}
+
+##################################
+
+sub r { return font({color=>'red'},$_[0]); }
+
+
+sub g { return font({color=>'green'},$_[0]); }
+
+################################
+
+sub smallfont { return i(font({size=>'2px'},$_[0])); }
+
+###################################
+
+sub detox {
+	 my $s = $_[0];
+	 my $n = '';
+	 my $i;
+	 while ($s) {
+		 my $c = chop $s;
+		 if ($c =~ /(,|\w|\.|\s|-)/) {  $n = $c.$n; }
+		 $i++;
+		 if ($i > 150) { last; }
+	 }
+	 $n =~ s/^\s+//g;
+	 $n =~ s/\s+$//g;
+	 $n =~ s/\s+/ /g;
+	return $n;
+}
+
+####################################
+
+
+
+
+sub clean_email { if (($_[0]) and (Email::Valid->address( -address => $_[0]))) { return $_[0]; } }
+
+#######################################################
+
+
+
+
+
+sub get_ldap {
+        my $OutputKey=$_[2];
+        my $InputKey=$_[0];
+        my $InputValue=$_[1];
+	my $ldap = Net::LDAP->new($ldapdata->{'ldapserver'}, port => $ldapdata->{'port'}, version => $ldapdata->{'version'});
+	$ldap->start_tls();
+	$ldap->bind($ldapdata->{'mathdn'},password => $ldapdata->{'ldappassword'});
+        my $result = $ldap->search(base => $ldapdata->{'basedn'}, scope => "sub", filter => "($InputKey=$InputValue)", attrs => ['*']);
+        my @Entries = $result->entries;
+        if (@Entries) { $result = $Entries[0]->get_value($OutputKey); }
+        else { return; }
+        unless ($result=~/Net..LDAP/) { return $result; }
+}
+
+
+
+sub store_data {
+	my $xlsx = Spreadsheet::XLSX -> new ($docroot . '/includes/data/people.xlsx');
+        my ($headings,@rows) = get_headings_and_rows(get_worksheet('',$xlsx));
+        my @h = @{$headings};
+        my $numcol = $#h;
+	unlink $docroot . '/includes/data/p.xlsx';
+	link $docroot . '/includes/data/people.xlsx', $docroot . '/includes/data/p.xlsx';
+	unlink $docroot . '/includes/data/people.xlsx';
+	my $workbook = Excel::Writer::XLSX->new($docroot . '/includes/data/people.xlsx')  or
+                die "Could not create excel workbook: $!";
+	my $worksheet = $workbook->add_worksheet()  or
+                        die "Unable to add worksheet: $!" ;
+	for my $col (0..$numcol) { $worksheet->write(0,$col,$headings->[$col]); }
+	for my $row (@rows) {
+		my @designations = split '\|', $row->{'designations'};
+	        my @d;
+        	for (@designations) { unless ($is_group->{$_}) { push @d, $_; } }
+        	$row->{'designations'} = join '|', @d;
+	}
+	for my $row (0..$#rows) {
+		for my $col (0..$numcol) { 
+			next unless ($headings->[$col]);
+			if ($rows[$row]->{$headings->[$col]}) 
+				{ $worksheet->write($row+1,$col,$rows[$row]->{$headings->[$col]}); }
+		}
+	}		
+	$workbook->close();
+	chmod 0664, $docroot . '/includes/data/people.xlsx';
+	return $#rows;
+}
+
+
+
+# returns array of rows of worksheet
+# each row a hashref whose  keys are 
+# the headings and the values are the 
+# corresponding cell  values
+# also returns headings as array ref
+
+sub get_headings_and_rows {
+        my $sheet = $_[0];
+        my @rows;
+        my $headings;
+        foreach my $col (0 ..  $sheet -> {MaxCol}) {
+                my $heading = $sheet -> {Cells} [0] [$col];
+                # remove leading and trailing whitespace
+                if ($heading -> {Val}) {
+                        $heading -> {Val} =~ s/\s+$//;
+                        $heading -> {Val} =~s/^\s+//;
+                }
+                if ($heading) { push @$headings, $heading -> {Val}; }
+        }
+        foreach my $row (1 .. $sheet -> {MaxRow}) {
+                my $h;
+                foreach my $col (0 ..  $sheet -> {MaxCol}) {
+                        my $cell = $sheet -> {Cells} [$row] [$col];
+                        my $heading = $headings -> [$col];
+                        if ($heading) {
+                                if ($cell -> {Val}) { $h -> {$heading} =  $cell -> {Val}; }
+                                else { $h -> {$heading} = ''; }
+                        }
+                }
+                push @rows, $h;
+        }
+        return ($headings,@rows);
+}
+
+
+# returns worksheet  corresponding to excel file 
+# and worksheet name
+
+sub get_worksheet {
+        my ($name,$excel) = @_;
+        my @worksheets = @{$excel -> {Worksheet}};
+        if ($#worksheets == 0) { return $worksheets[0]; }
+        for (@{$excel -> {Worksheet}}) {
+                next unless ($_->{Name} eq $name);
+                return $_;
+        }
+        die "worksheet $name nonexistent in excel\n";
+}
+
+
+sub clean_phone {
+	my $phone = $_[0];
+	my $clean;
+	return unless ($phone);
+	while ($phone =~ s/(\d)//) {  $clean .= $1; }
+	if ($clean =~ /^(...)(...)(....)$/) { return '(' . $1 . ') ' . $2 . '-' . $3; }
+	else { return; }
+}
+	

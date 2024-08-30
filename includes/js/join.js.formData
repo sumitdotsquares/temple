@@ -1,0 +1,52 @@
+
+tinymce.init({
+    selector: "textarea",
+    plugins: [
+        "advlist autolink lists link image charmap print preview anchor",
+        "searchreplace visualblocks code fullscreen",
+        "insertdatetime media table contextmenu paste"
+    ],
+    toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+    height: "200",
+    width:"500",
+});
+
+$("#email").focusout( function() {
+        var email = $("#email").val();
+        $.ajax({
+                url: '/cgi-bin/get_blurb?email=' + email,
+                type: 'GET',
+          //      success: function( response ) { $("#bio").val(response); }
+                success: function( response ) { tinymce.get('bio').setContent(response); loadnext();  }
+
+        });
+});
+
+
+var files = null;
+
+$("input[type=file]").on("change", function (e) {
+     files = e.target.files;
+});
+
+
+function loadnext() {
+
+$("#upload").bind("submit", function (e) {
+	var formdata = new FormData(this);
+	if (files !== null) {
+		$.each(files, function (k, v) { formdata.append(k, v); });
+	}
+	$.ajax({
+        	data: formdata,
+		type: 'POST',
+		url: '/cgi-bin/join',
+        	context: this,
+        	processData: false,
+        	contentType: false,
+        	success: function( response ) { $("#response").replaceWith(response); }
+    	});
+	return false;
+});
+
+}

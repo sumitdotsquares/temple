@@ -1,0 +1,12 @@
+
+
+David Futer studies low-dimensional topology and geometry. 
+
+A central goal of his research is to relate several distict themes in low-dimensional topology: combinatorial descriptions of <a href="http://en.wikipedia.org/wiki/3-manifold">3-manifolds</a>, their (typically hyperbolic) <a href="http://en.wikipedia.org/wiki/Geometrization_conjecture"> geometry</a>, the <a href="http://en.wikipedia.org/wiki/Geometric_group_theory">coarse geometry</a> of fundamental groups, and  <a href="http://en.wikipedia.org/wiki/Quantum_topology">quantum invariants</a> of knots and links. These distinct points of view turn out to be inter-related in <a href="http://www.springer.com/mathematics/geometry/book/978-3-642-33301-9">surprising ways</a>.
+
+
+
+
+
+
+

@@ -1,0 +1,7 @@
+<p>Broadly, Stover is interested in the interplay between geometry, topology, number theory, and group theory. Most of his work is on the geometry and topology of locally symmetric manifolds, which are Riemannian manifolds closely related to discrete subgroups of Lie groups, and their generalizations, especially those spaces arising from arithmetic subgroups of algebraic groups. He is especially interested in using techniques from number theory, group theory, and algebraic geometry to understand negatively curved locally symmetric manifolds, like compact hyperbolic n-manifolds. More recently, he has started working in the other direction, applying geometric techniques inspired by ideas in low-dimensional topology to prove theorems in number theory and algebraic geometry. He also has interests in character varieties of finitely generated groups, which are spaces parametrizing representations into a fixed Lie groups, particularly for those groups appearing in low-dimensional topology.Stover received his Ph.D. at the University of Texas, where he was a student of Alan W. Reid.Selected publications:</p>
+<ol>
+<li>On the number of ends of rank one locally symmetric spaces <em>Geom. Topol.</em> 17 (2013), no. 2, 905-924</li>
+<li>Covolumes of nonuniform lattices in \(PU(n,1)\) (w/ Vincent Emery) <em>Amer. J. Math.</em> 136 (2014), no. 1, 143-164</li>
+<li>Hurwitz ball quotients <em>Math. Z.</em> 277 (2014), no. 1-2, 75-91</li>
+</ol>
+

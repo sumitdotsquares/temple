@@ -1,0 +1,264 @@
+#!/usr/bin/perl
+
+use strict;
+use CGI qw/:all/;
+use CGI::Pretty;
+use CGI::Carp 'fatalsToBrowser';
+#use Text::CSV;
+use URI;
+
+my @pwuid = getpwuid($<);
+my $owner = $pwuid[0];
+my $homedir = $pwuid[7];
+
+my $docroot = $ENV{'DOCUMENT_ROOT'};
+
+# extract selection on main navbar
+# note this has leading and trailing /'s, i.e. of the form /*/*/.../
+my $uri = URI->new($ENV{'REQUEST_URI'},'https');
+my $uri = $uri->path();
+$uri =~ s/%([0-9A-Fa-f]{2})/chr(hex($1))/eg;
+
+my $order;
+
+$uri =~ /^\/(.*?)(\/|$)/;
+
+my @videos = get_videos($uri); # relative to $docroot
+
+my $title = getvalue($docroot . $uri . '.title');
+
+print header;
+
+print p('Click on chapters.');
+
+my %ul;
+
+for (@videos) {
+	my $title = $_;
+	my $chapter;
+	my $section;
+	my $problem;
+	my @problems;
+	$title=~s/mp4//ig;
+	$title=~/(\d+)/ and $chapter=$1;
+	if ($title=~/review/i) {
+		(@problems) = ($title=~/(\d+)/g);
+		$chapter=$problems[0];
+		$section="Review";
+		$problem=$problems[1];
+	}
+	elsif ($title=~/^A/) {
+		(@problems) = ($title=~/(\d+)/g);
+                $chapter=$problems[0];
+                $section="A";
+                $problem=$problems[1];
+	}
+	else {
+		@problems=split /\./,$title;
+        	$problems[0]=~/(\d+)/ and $chapter=$1;
+        	$problems[1]=~/(\d+)/ and $section=$1;
+        	$problem=$problems[2];
+	}
+#print "++",$title,"--chapter: ",$chapter,", section: ",$section,", problem :",$problem,"<br>\n";
+
+	push @{$ul{$chapter}}, li(a({-href=>$uri . $_},$section.": ".$problem))."\n";
+}
+my @sorted;
+print "<div id='accordion'><br>";
+for (sort keys %ul) {
+	print "<span style=\"border: none;margin-bottom: 10px;\" class=\"block\"><b>Chapter ",$_,"</b></span>\n";
+	print "<div class=\"courseblockdesc\">\n";
+	@sorted=sort sort_videos @{$ul{$_}};
+print ul(@sorted);
+#print ul(@{$ul{$_}});
+	print "<div class='courseblockheaddiv'>\n";
+	print "</div><p class='courseblockpart'></p></div>";
+}
+print "</div><br>";
+
+#############################
+
+
+sub getvalue {
+	my $file = $_[0];
+	return unless (-e $file);
+	open FILE, '<', $file;
+	my @lines = <FILE>;
+	close FILE;
+	return join '', @lines;
+}
+
+sub sort_videos {
+	my ($aS,$aP)= section_and_problem($a);
+	my ($bS,$bP)= section_and_problem($b);
+	if ($aS =~ /\d/) {
+		if ($bS =~ /\d/) {
+			if ($aS<$bS) {return -1}
+			elsif ($aS>$bS) {return 1}
+			else {
+				$aP=~/(\d+)/ and $aP=$1;
+				$bP=~/(\d+)/ and $bP=$1;
+				if ($aP<$bP){return -1} elsif ($aP>$bP) {return 1} else {return 0};
+			}
+		}
+		elsif ($bS = ~/^[A-Za-z]/) { return -1 }
+		else {0}
+	}
+	if ($aS =~ /^A/) {
+		if ($bS =~ /\d/) { return 1 }
+		elsif ($bS =~ /^A/) {
+			$aP=~/(\d+)/ and $aP=$1;
+			$bP=~/(\d+)/ and $bP=$1;
+			if ($aP<$bP){return -1} elsif ($aP>$bP) {return 1} else {0};
+		}
+	else { return -1 }
+	}
+	if ($aS =~ /^R/) {
+		if ($bS =~ /\d/) { return 1 }
+		elsif ($bS =~ /^A/) { return 1}
+	else {
+			$aP=~/(\d+)/ and $aP=$1;
+			$bP=~/(\d+)/ and $bP=$1;
+			if ($aP<$bP){return -1} elsif ($aP>$bP) {return 1} else {return 0};
+		}
+	}
+}
+
+sub section_and_problem {
+	my $a=$_[0];
+	my $aa;
+	$a =~ />(\w*:\s+[A-Za-z0-9-]+)</ and $aa = $1;
+	my ($section, $problem) = split /:/,$aa;
+	$section=~s/ //g;
+	$problem=~s/ //g;
+	return($section, $problem);
+}
+
+sub get_videos {
+        # $dir is relative to $docroot without leading and trailing /
+        my $dir = $_[0];
+	my $video;
+        # if not, remove leading and trailing /
+        if ($docroot) { $dir =~ s/^\///; }
+        $dir =~ s/\/$//;
+        #return unless (-d $docroot . $dir);
+        opendir DIR, $docroot . "/" . $dir;
+        my @entries = readdir DIR;
+        closedir DIR;
+        my @videos;
+        for (@entries) { 
+                next if (/^\./);
+                if ($_=~/\.MP4$/i) {push @videos, $_}; 
+        }
+        return sort @videos;
+}
+
+
+sub get_folder {
+	# $dir is relative to $docroot without leading and trailing /
+	my $dir = $_[0];
+        # if not, remove leading and trailing /
+        if ($docroot) { $dir =~ s/^\///; }
+        $dir =~ s/\/$//;
+	return unless (-d $docroot . $dir);
+	my $order = get_order($dir);
+	opendir DIR, $docroot . $dir;
+	my @dirs = readdir DIR;
+	closedir DIR;
+	my @navbar;
+	for (@dirs) { 
+		next if (/^\./);
+		if ($docroot) {
+			my $activated = is_active($dir . '/' . $_);
+			if ($activated) { push @navbar, $_; }
+		}
+		else { push @navbar, $_; }
+	}
+	return sort { $order->{$a} <=> $order->{$b} } @navbar;
+}
+
+sub get_menu {
+        # $dir is relative to $docroot i.e. is REQUEST_URI without leading and trailing /
+	my $dir = $_[0];
+        # if not, remove leading and trailing /
+        $dir =~ s/^\///;
+        $dir =~ s/\/$//;
+	return unless (-e $docroot . $dir . '/.title');
+	my $title = getvalue($docroot . $dir . '/.title');
+	return unless ($title);
+	# num=1 corresponds to top-level dirs inside docroot
+        my $num = getnum($dir)+1; # get the depth of $dir in filetree
+        my @ul;
+        opendir DIR, $docroot . $dir;
+        my @dirs = readdir DIR;
+        closedir DIR;
+        my @navbar;
+        for (@dirs) {
+                next if (/^\./);
+                next unless (-d $docroot . $dir . '/' . $_);
+		next unless (is_active($dir . '/' . $_));
+                push @navbar, $_;
+        }
+        my $order = get_order($dir);
+	@navbar =  sort { $order->{$a} <=> $order->{$b} } @navbar;
+	my $grid = $#navbar+1;
+        if (@navbar) { $grid = int(12/$grid); }
+        for (@navbar) {
+                my ($t,@subul) = get_menu($dir . '/' . $_);
+                if ((@subul) and ($num == 1)) { push @ul, li({-class=>'dropdown col-xs-'.$grid},$t."\n".ul(@subul)); }
+                elsif (@subul) { push @ul, li({-class=>'dropdown'},$t."\n".ul(@subul)); }
+                elsif ($num == 1) { push @ul, li({-class=>'col-xs-'.$grid},$t); }
+                else { push @ul, li($t); }
+        }
+        if ((-e $docroot . $dir . '/index.html') and (@ul)) { return (a({-href=>'/'.$dir},$title),@ul); }
+        elsif (@ul) { return ($title,@ul); }
+        elsif (-e $docroot . $dir . '/index.html') { return (a({-href=>'/'.$dir},$title),()); }
+        else { return ($title,()); }
+}
+
+
+sub getnum {
+	# $dir relative to $docroot with leading and trailing /
+        my $dir = $_[0];
+        my @components = split '/', $dir;
+        return $#components;
+}
+           
+
+sub is_active {
+	# $dir is relative to $docroot without leading and trailing /
+	my $dir = $_[0];
+        # if not, remove leading and trailing /
+        $dir =~ s/^\///;
+        $dir =~ s/\/$//;
+	return unless (-d $docroot . $dir);
+	return unless (-e $docroot . $dir . '/.title');
+	$dir =~ /^(.*?)(\/|$)/;
+	return $1;
+}
+
+sub get_order {
+        # $dir is relative to $docroot without leading and trailing /
+	my $dir = $_[0];
+ 	# if not, remove leading and trailing /
+	$dir =~ s/^\///;
+	$dir =~ s/\/$//;
+	my $order;
+	if ($docroot) { $docroot .= '/'; }
+        return unless (-d $docroot  . $dir);
+	opendir DIR, $docroot .  $dir;
+	my @dirs = readdir DIR;
+	closedir DIR;
+	for (@dirs) {
+		next if (/^\./);
+		next unless (-d $docroot . $dir . '/' . $_);
+		$order->{$_} = 1000; 
+	}
+        return $order unless (-e $docroot  . $dir . '/.order');
+	open FILE, $docroot . $dir . '/.order';
+	my @dirs = <FILE>;
+	close FILE;
+	chomp @dirs;
+	for (0..$#dirs) { $order->{$dirs[$_]} = $_+1; }
+	return $order;
+}

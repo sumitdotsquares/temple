@@ -1,0 +1,5 @@
+<p>
+I have been a member of Temple's Mathematics faculty since 2014, after completing the PhD program at the University of Pittsburgh. I am an Associate Professor of Instruction and have taught and coordinated a variety of mathematics undergraduate courses.  I enjoy the "putting the ball in students' hands" nature of certain active learning strategies and have won a Dean's Distinguished Teaching award.
+<p></p>
+My research interests include Banach Space Geometry and some questions related to Ranked Preference Voting.  Collaborations with students have included fixed point research questions and voting simulations implemented via Python.
+</p>

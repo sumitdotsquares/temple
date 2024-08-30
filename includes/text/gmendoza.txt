@@ -1,0 +1,2 @@
+<p>My main area of research is linear partial differential equations, in particular microlocal analysis, solvability, complex analysis, and analysis on manifolds with singularities. My current interests lie in global analysis, principally on manifolds with singularities, spectral theory of partial differential operators on such manifolds, and various aspects of elliptic differential complexes ranging from local to global.</p>
+

@@ -1,0 +1,4 @@
+<p>Hi!</p>
+<p>I am originally from North Jersey and am working with the Applied Mathematics group. My research is primarily in the field of Molecular Dynamics. I am working on the development of new numerical methods for coarse-grained models.</p>
+<p>In addition, I am working on the modeling of invasive species spread using anomolous diffusion models and fractional calculus.</p>
+

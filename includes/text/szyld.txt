@@ -1,0 +1,21 @@
+Daniel Szyld is Professor of Mathematics at Temple University.
+He received his PhD at the Courant Institute, New York University, where he attended
+after undergraduate studies in his native Buenos Aires.
+
+He has worked on many aspects of numerical linear algebra and 
+matrix computations, including eigenvalue problems, sparse matrix 
+techniques, preconditioning, Schwarz methods and domain decomposition, 
+and Krylov subspace methods. His interests also include asynchronous parallel
+methods for the solution of linear and non-linear problems on high-performance
+computers.
+
+He has served in multiple editorial boards, and currently he is 
+the editor-in-chief of the SIAM Journal on Matrix Analysis and Applications. 
+Previously he was an editor-in-chief of the Electronic Transactions on 
+Numerical Analysis.
+
+He has served on the Board of the International Linear Algebra Society,
+and most recently, as Vice-President at-large of the Society of Industrial and
+Applied Mathematics.
+
+
